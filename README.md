@@ -226,7 +226,7 @@ Ideas for new detection rules are especially welcome.
 
 ## 📄 License
 
-© 2025 Srilekha. All rights reserved.
+MIT
 
 ---
 
