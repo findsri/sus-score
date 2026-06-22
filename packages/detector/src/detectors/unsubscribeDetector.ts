@@ -1,4 +1,5 @@
 import * as cheerio from 'cheerio';
+import type { Element } from 'domhandler';
 import { DetectedPattern, PatternCategory, Severity } from '../types';
 import { getContrastRatio } from '../utils/contrast';
 import { v4 as uuidv4 } from 'uuid';
@@ -51,7 +52,7 @@ function getAttribs(el: unknown): Record<string, string> {
   return (el as any)?.attribs ?? {};
 }
 
-function isUnsubscribeElement($el: cheerio.Cheerio): boolean {
+function isUnsubscribeElement($el: cheerio.Cheerio<Element>): boolean {
   const text = $el.text().toLowerCase().trim();
   const href = ($el.attr('href') as string | undefined) ?? '';
   const title = (($el.attr('title') as string | undefined) ?? '').toLowerCase();
