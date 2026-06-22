@@ -36,20 +36,6 @@ export default function HomePage() {
 
     setLoading(true);
 
-    // Try demo data first for known URLs (instant, no API needed)
-    if (mode === 'url') {
-      const demo = getDemoScan(urlInput.trim());
-      if (demo) {
-        await new Promise(r => setTimeout(r, 1200)); // realistic loading feel
-        setResult(demo);
-        setIsDemoResult(true);
-        setLoading(false);
-        toast.success(`Scan complete — Evil Score: ${demo.evilScore}/100`);
-        return;
-      }
-    }
-
-    // Otherwise call the real API
     try {
       const payload = mode === 'url'
         ? { url: urlInput.trim(), takeScreenshot: false }
@@ -60,7 +46,7 @@ export default function HomePage() {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Scan failed. Please try again.';
       setError(msg);
-      toast.error('API unavailable — try one of the demo sites below for an instant preview.');
+      toast.error('Scan failed');
     } finally {
       setLoading(false);
     }
@@ -72,6 +58,7 @@ export default function HomePage() {
     setError('');
     setResult(null);
     setIsDemoResult(false);
+    // Check for instant demo data first, then fall through to real scan
     const demo = getDemoScan(url);
     if (demo) {
       setLoading(true);
@@ -80,7 +67,12 @@ export default function HomePage() {
         setIsDemoResult(true);
         setLoading(false);
         toast.success(`Scan complete — Evil Score: ${demo.evilScore}/100`);
-      }, 1000);
+      }, 900);
+    } else {
+      // Trigger a real scan for this URL
+      const fakeEvent = { preventDefault: () => {} } as React.FormEvent;
+      setUrlInput(url);
+      setTimeout(() => handleScan(fakeEvent), 50);
     }
   }
 
@@ -210,7 +202,7 @@ export default function HomePage() {
             transition={{ delay: 0.4 }}
             className="mt-5 space-y-2"
           >
-            <p className="text-xs text-muted">Try a live demo — instant results, no setup needed:</p>
+            <p className="text-xs text-muted">Quick examples — or type any URL above:</p>
             <div className="flex flex-wrap gap-2 justify-center">
               {DEMO_SITES.map(({ url, label }) => (
                 <button
@@ -243,7 +235,7 @@ export default function HomePage() {
             {isDemoResult && (
               <div className="flex items-center gap-2 mb-4 text-xs text-muted bg-surface border border-border rounded-lg px-3 py-2 w-fit mx-auto">
                 <Star className="w-3.5 h-3.5 text-warning" />
-                Demo result — start the API server for live scanning of any URL
+                Showing cached demo result — type any other URL above to run a live scan
               </div>
             )}
             <ScanResults result={result} />

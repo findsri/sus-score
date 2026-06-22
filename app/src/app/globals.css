@@ -8,7 +8,7 @@
   --background: #0a0a0f;
   --surface: #13131a;
   --border: #1e1e2e;
-  --accent: #7c3aed;
+  --accent: #2f80c0;
   --danger: #ef4444;
   --warning: #f59e0b;
   --success: #10b981;
@@ -45,7 +45,7 @@ body {
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #a78bfa, #f472b6);
+  background: linear-gradient(135deg, #7ec8e3, #38bdf8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

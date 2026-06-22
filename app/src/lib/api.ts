@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { ScanResult } from '@dark-pattern-detector/detector';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+// Express backend (optional — used for screenshots, DB persistence, leaderboard)
+const EXPRESS_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
-export const api = axios.create({
-  baseURL: API_URL,
+export const expressApi = axios.create({
+  baseURL: EXPRESS_URL,
   timeout: 60000,
 });
 
@@ -21,13 +22,33 @@ export async function runScan(params: {
   isEmail?: boolean;
   takeScreenshot?: boolean;
 }): Promise<ScanResponse> {
-  const { data } = await api.post<ScanResponse>('/api/scan', params);
-  return data;
+  // Always try the built-in Next.js API route first — works with no backend
+  try {
+    const res = await fetch('/api/scan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+      throw new Error(err.error || `Scan failed with status ${res.status}`);
+    }
+    return await res.json() as ScanResponse;
+  } catch (err) {
+    // If the Next.js route itself errored (not a fetch/network error), rethrow
+    if (err instanceof Error && !err.message.includes('fetch')) {
+      throw err;
+    }
+    // Fallback to Express backend if running
+    const { data } = await expressApi.post<ScanResponse>('/api/scan', params);
+    return data;
+  }
 }
 
 export async function getScan(id: string): Promise<ScanResponse> {
-  const { data } = await api.get<ScanResponse>(`/api/scan/${id}`);
-  return data;
+  const res = await fetch(`/api/scan/${id}`);
+  if (!res.ok) throw new Error('Scan not found');
+  return res.json() as Promise<ScanResponse>;
 }
 
 export interface LeaderboardEntry {
@@ -40,7 +61,7 @@ export interface LeaderboardEntry {
 }
 
 export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
-  const { data } = await api.get<{ entries: LeaderboardEntry[] }>('/api/leaderboard');
+  const { data } = await expressApi.get<{ entries: LeaderboardEntry[] }>('/api/leaderboard');
   return data.entries;
 }
 
@@ -51,13 +72,13 @@ export interface TimelineEntry {
 }
 
 export async function getTimeline(domain: string): Promise<TimelineEntry[]> {
-  const { data } = await api.get<{ domain: string; timeline: TimelineEntry[] }>(
+  const { data } = await expressApi.get<{ domain: string; timeline: TimelineEntry[] }>(
     `/api/leaderboard/timeline/${encodeURIComponent(domain)}`
   );
   return data.timeline;
 }
 
 export async function getRecentScans() {
-  const { data } = await api.get('/api/leaderboard/recent');
+  const { data } = await expressApi.get('/api/leaderboard/recent');
   return data.scans;
 }
