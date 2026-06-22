@@ -1,0 +1,19 @@
+{
+  "name": "dark-pattern-detector",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "app",
+    "api",
+    "packages/detector",
+    "extension"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=api\" \"npm run dev --workspace=app\"",
+    "build": "npm run build --workspace=packages/detector && npm run build --workspace=api && npm run build --workspace=app",
+    "install:all": "npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

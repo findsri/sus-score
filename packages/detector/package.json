@@ -1,0 +1,20 @@
+{
+  "name": "@dark-pattern-detector/detector",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "wcag-contrast": "^3.0.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/node": "^20.11.5",
+    "@types/uuid": "^9.0.7"
+  }
+}
