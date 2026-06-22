@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
+import axios from 'axios';
 
 // ── Inline detector (no external API needed) ──────────────────────────────────
 // We re-implement the core detection logic here so the Next.js app works
@@ -333,20 +334,22 @@ export async function POST(req: NextRequest) {
     // Fetch page HTML if URL was given
     if (url && !rawHtml) {
       try {
-        const res = await fetch(url, {
+        const res = await axios.get<string>(url, {
           headers: {
             'User-Agent': 'Mozilla/5.0 (compatible; DarkPatternBot/1.0; +https://github.com/findsri/dark-pattern-detector)',
             'Accept': 'text/html,application/xhtml+xml',
           },
-          signal: AbortSignal.timeout(20000),
-          // @ts-expect-error next.js edge runtime
-          next: { revalidate: 0 },
+          timeout: 20000,
+          responseType: 'text',
+          maxRedirects: 5,
         });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        pageHtml = await res.text();
+        pageHtml = res.data;
       } catch (fetchErr) {
+        const msg = axios.isAxiosError(fetchErr)
+          ? fetchErr.message
+          : 'Network error';
         return NextResponse.json(
-          { error: `Could not fetch the URL: ${fetchErr instanceof Error ? fetchErr.message : 'Network error'}. Try pasting the page HTML directly instead.` },
+          { error: `Could not fetch the URL: ${msg}. Try pasting the page HTML directly instead.` },
           { status: 422 }
         );
       }
