@@ -1,16 +1,24 @@
 {
   "manifest_version": 3,
   "name": "Dark Pattern Detector",
-  "version": "1.0.0",
-  "description": "Detects hidden unsubscribe buttons and dark patterns on any website",
-  "permissions": ["activeTab", "scripting", "storage"],
-  "host_permissions": ["<all_urls>"],
+  "version": "1.0.1",
+  "description": "Detects hidden unsubscribe buttons and dark patterns on any website you visit.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "http://localhost:3000/*"
+  ],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["http://*/*", "https://*/*"],
       "js": ["content.js"],
       "run_at": "document_idle"
     }
@@ -19,8 +27,8 @@
     "default_popup": "popup.html",
     "default_title": "Dark Pattern Detector",
     "default_icon": {
-      "16": "icon16.png",
-      "48": "icon48.png",
+      "16":  "icon16.png",
+      "48":  "icon48.png",
       "128": "icon128.png"
     }
   }

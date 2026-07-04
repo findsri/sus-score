@@ -2,6 +2,30 @@ import { NextRequest, NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
 import axios from 'axios';
 
+// Allow requests from Chrome extensions and localhost
+function corsHeaders(origin?: string | null) {
+  const allowed =
+    !origin ||
+    origin.startsWith('chrome-extension://') ||
+    origin.startsWith('moz-extension://') ||
+    origin === 'http://localhost:3000' ||
+    origin === 'http://localhost:4000';
+
+  return {
+    'Access-Control-Allow-Origin': allowed ? (origin ?? '*') : 'http://localhost:3000',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Max-Age': '86400',
+  };
+}
+
+export async function OPTIONS(req: NextRequest) {
+  return new NextResponse(null, {
+    status: 204,
+    headers: corsHeaders(req.headers.get('origin')),
+  });
+}
+
 type PatternCategory =
   | 'low_contrast' | 'tiny_font' | 'hidden_element' | 'no_styling'
   | 'off_screen' | 'misleading_label' | 'confirm_shaming'
@@ -552,12 +576,15 @@ async function fetchHtml(url: string): Promise<{ html: string; error?: string }>
 // ── Route handler ─────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
+  const origin = req.headers.get('origin');
+  const headers = corsHeaders(origin);
+
   try {
     const body = await req.json() as { url?: string; html?: string; isEmail?: boolean };
     const { url, html: rawHtml } = body;
 
     if (!url && !rawHtml) {
-      return NextResponse.json({ error: 'Either url or html is required' }, { status: 400 });
+      return NextResponse.json({ error: 'Either url or html is required' }, { status: 400, headers });
     }
 
     let pageHtml = rawHtml ?? '';
@@ -568,9 +595,8 @@ export async function POST(req: NextRequest) {
       if (!html) {
         return NextResponse.json({
           error: `Could not fetch this URL: ${error || 'blocked or unreachable'}. Try pasting the page HTML directly instead.`,
-        }, { status: 422 });
+        }, { status: 422, headers });
       }
-      // If we got a very short page it's likely a bot-wall
       if (html.length < 2000) {
         fetchWarning = 'This site may be blocking automated access — results may be limited. For best results, paste the page HTML directly.';
       }
@@ -597,9 +623,9 @@ export async function POST(req: NextRequest) {
       linkedInPost,
       diff,
       warning: fetchWarning,
-    });
+    }, { headers });
   } catch (err) {
     console.error('Scan error:', err);
-    return NextResponse.json({ error: 'Internal scan error' }, { status: 500 });
+    return NextResponse.json({ error: 'Internal scan error' }, { status: 500, headers });
   }
 }
