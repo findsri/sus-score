@@ -1,4 +1,4 @@
-# 🕵️ Dark Pattern Detector
+#  Dark Pattern Detector
 
 > **Expose the manipulation. Score the shame. Fix the web.**
 
@@ -11,7 +11,7 @@ A full-stack tool that scans any website or email for deceptive UX dark patterns
 
 ---
 
-## 🔥 What It Does
+##  What It Does
 
 You've seen them. Websites that:
 - Hide the "Unsubscribe" button in 7px grey text on a white background
@@ -23,23 +23,22 @@ You've seen them. Websites that:
 
 ---
 
-## ✨ Features
+##  Features
 
 | Feature | Description |
 |---|---|
-| 🎯 **Evil Score (0–100)** | Animated gauge with per-category breakdown |
-| 🔍 **8 Dark Pattern Detectors** | Low contrast, tiny fonts, hidden elements, confirm-shaming, misleading labels, pre-ticked boxes, fake urgency, footer burial |
-| 📸 **Before/After Screenshots** | Side-by-side original vs cleaned view via Puppeteer |
-| 📧 **Email Newsletter Scanner** | Paste raw email HTML — first tool to detect dark patterns *inside* emails |
-| 🏆 **Hall of Shame Leaderboard** | Community-ranked most manipulative websites |
-| 📈 **Evil Score Timeline** | Track how a site's dark patterns change week over week |
-| 🔧 **"Fix It For Me"** | Diff view showing the exact HTML changes needed |
-| 💼 **LinkedIn Post Generator** | One-click ready-to-post report for sharing findings |
-| 🧩 **Chrome Extension** | Real-time Evil Score badge on every page you visit |
+|  **Evil Score (0–100)** | Animated gauge with per-category breakdown |
+|  **8 Dark Pattern Detectors** | Low contrast, tiny fonts, hidden elements, confirm-shaming, misleading labels, pre-ticked boxes, fake urgency, footer burial |
+|  **Before/After Screenshots** | Side-by-side original vs cleaned view via Puppeteer |
+|  **Email Newsletter Scanner** | Paste raw email HTML — first tool to detect dark patterns *inside* emails |
+|  **Evil Score Timeline** | Track how a site's dark patterns change week over week |
+|  **"Fix It For Me"** | Diff view showing the exact HTML changes needed |
+|  **LinkedIn Post Generator** | One-click ready-to-post report for sharing findings |
+|  **Chrome Extension** | Real-time Evil Score badge on every page you visit |
 
 ---
 
-## 🖥️ Demo
+##  Demo
 
 > Try it live or run the demo mode locally (no database needed)
 
@@ -54,7 +53,7 @@ You've seen them. Websites that:
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 - Node.js 18+
@@ -98,7 +97,7 @@ npm run dev   # starts both API (4000) and frontend (3000)
 
 ---
 
-## 🧩 Chrome Extension
+##  Chrome Extension
 
 1. Go to `chrome://extensions`
 2. Enable **Developer Mode** (top right)
@@ -109,7 +108,7 @@ You'll see an Evil Score badge appear on every website you visit.
 
 ---
 
-## 🏗️ Project Structure
+##  Project Structure
 
 ```
 dark-pattern-detector/
@@ -123,7 +122,7 @@ dark-pattern-detector/
 │   ├── src/db.ts               # PostgreSQL schema
 │   └── src/screenshot.ts       # Puppeteer integration
 │
-├── packages/detector/          # 📦 Shared detection library (importable)
+├── packages/detector/          #  Shared detection library (importable)
 │   ├── src/detectors/          # unsubscribeDetector, generalDarkPatterns
 │   ├── src/utils/scoring.ts    # Evil Score algorithm
 │   ├── src/linkedInGenerator.ts
@@ -137,7 +136,7 @@ dark-pattern-detector/
 
 ---
 
-## 🔌 API Reference
+##  API Reference
 
 ### `POST /api/scan`
 
@@ -173,7 +172,7 @@ dark-pattern-detector/
 
 ---
 
-## 🧠 How the Evil Score Works
+##  How the Evil Score Works
 
 Each detected pattern adds weighted points to a category bucket (capped per category). The total is normalized to 0–100.
 
@@ -191,7 +190,7 @@ Each detected pattern adds weighted points to a category bucket (capped per cate
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Frontend**: Next.js 14 (App Router) · Tailwind CSS · Framer Motion · Recharts
 - **Backend**: Express · TypeScript · Zod · express-rate-limit
@@ -202,7 +201,7 @@ Each detected pattern adds weighted points to a category bucket (capped per cate
 
 ---
 
-## ☁️ Deployment
+##  Deployment
 
 **Frontend → Vercel**
 ```bash
@@ -217,7 +216,7 @@ cd app && vercel deploy
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 Found a dark pattern this tool misses? Open an issue or PR.
 Ideas for new detection rules are especially welcome.
