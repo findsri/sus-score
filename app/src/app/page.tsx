@@ -238,6 +238,12 @@ export default function HomePage() {
                 Showing cached demo result — type any other URL above to run a live scan
               </div>
             )}
+            {result.warning && (
+              <div className="flex items-center gap-2 mb-4 text-xs text-warning bg-warning/10 border border-warning/20 rounded-lg px-3 py-2 max-w-2xl mx-auto">
+                <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+                {result.warning}
+              </div>
+            )}
             <ScanResults result={result} />
           </motion.div>
         )}
