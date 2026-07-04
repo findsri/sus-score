@@ -1,20 +1,37 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Link2, FileCode, Loader2, AlertCircle, Shield, Sparkles, Star } from 'lucide-react';
 import { toast } from 'sonner';
 import { runScan, ScanResponse } from '@/lib/api';
-import { getDemoScan, DEMO_SCANS } from '@/lib/demoData';
-import { cn } from '@/lib/utils';
+import { getDemoScan } from '@/lib/demoData';
+import { cn, getScoreColor } from '@/lib/utils';
 import { ScanResults } from './ScanResults';
 
 type InputMode = 'url' | 'html';
 
-const DEMO_SITES = [
-  { url: 'https://booking.com', score: 71, label: '🔴 71 — Very Shady' },
-  { url: 'https://linkedin.com', score: 74, label: '🟠 74 — Manipulative' },
-  { url: 'https://github.com', score: 8, label: '🟢 8 — Mostly Clean' },
+const QUICK_SITES = [
+  { url: 'https://booking.com',  domain: 'booking.com'  },
+  { url: 'https://linkedin.com', domain: 'linkedin.com' },
+  { url: 'https://reddit.com',   domain: 'reddit.com'   },
+  { url: 'https://github.com',   domain: 'github.com'   },
 ];
+
+// Live score badge shown next to each quick-scan button
+function ScorePill({ score }: { score: number | null }) {
+  if (score === null) return (
+    <span className="text-[10px] text-muted/60 font-mono">scanning…</span>
+  );
+  const color = getScoreColor(score);
+  return (
+    <span
+      className="text-[10px] font-bold font-mono px-1.5 py-0.5 rounded"
+      style={{ background: `${color}25`, color }}
+    >
+      {score}
+    </span>
+  );
+}
 
 export default function HomePage() {
   const [mode, setMode] = useState<InputMode>('url');
@@ -24,6 +41,23 @@ export default function HomePage() {
   const [result, setResult] = useState<ScanResponse | null>(null);
   const [error, setError] = useState('');
   const [isDemoResult, setIsDemoResult] = useState(false);
+  // Live scores for quick-scan buttons: null = scanning, number = done
+  const [liveScores, setLiveScores] = useState<Record<string, number | null>>(
+    Object.fromEntries(QUICK_SITES.map(s => [s.domain, null]))
+  );
+
+  // Scan all quick sites in background on mount to show real scores
+  useEffect(() => {
+    QUICK_SITES.forEach(({ url, domain }) => {
+      runScan({ url })
+        .then(data => setLiveScores(prev => ({ ...prev, [domain]: data.evilScore })))
+        .catch(() => {
+          // Fallback to demo data score if API fails
+          const demo = getDemoScan(url);
+          if (demo) setLiveScores(prev => ({ ...prev, [domain]: demo.evilScore }));
+        });
+    });
+  }, []);
 
   async function handleScan(e: React.FormEvent) {
     e.preventDefault();
@@ -58,7 +92,6 @@ export default function HomePage() {
     setError('');
     setResult(null);
     setIsDemoResult(false);
-    // Check for instant demo data first, then fall through to real scan
     const demo = getDemoScan(url);
     if (demo) {
       setLoading(true);
@@ -69,7 +102,6 @@ export default function HomePage() {
         toast.success(`Scan complete — Evil Score: ${demo.evilScore}/100`);
       }, 900);
     } else {
-      // Trigger a real scan for this URL
       const fakeEvent = { preventDefault: () => {} } as React.FormEvent;
       setUrlInput(url);
       setTimeout(() => handleScan(fakeEvent), 50);
@@ -202,20 +234,25 @@ export default function HomePage() {
             transition={{ delay: 0.4 }}
             className="mt-5 space-y-2"
           >
-            <p className="text-xs text-muted">Quick examples — or type any URL above:</p>
+            <p className="text-xs text-muted">Quick examples — real scores, updated live:</p>
             <div className="flex flex-wrap gap-2 justify-center">
-              {DEMO_SITES.map(({ url, label }) => (
-                <button
-                  key={url}
-                  onClick={() => loadDemo(url)}
-                  disabled={loading}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border bg-surface text-xs font-medium text-text-secondary hover:border-accent/40 hover:text-text-primary transition-all disabled:opacity-50"
-                >
-                  <Sparkles className="w-3 h-3 text-accent-light" />
-                  {url.replace('https://', '')}
-                  <span className="text-muted">{label.split('—')[0].trim()}</span>
-                </button>
-              ))}
+              {QUICK_SITES.map(({ url, domain }) => {
+                const score = liveScores[domain];
+                const color = score !== null ? getScoreColor(score) : '#6b7280';
+                return (
+                  <button
+                    key={url}
+                    onClick={() => loadDemo(url)}
+                    disabled={loading}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-surface text-xs font-medium text-text-secondary hover:border-accent/40 hover:text-text-primary transition-all disabled:opacity-50"
+                    style={{ borderColor: score !== null ? `${color}40` : undefined }}
+                  >
+                    <Sparkles className="w-3 h-3" style={{ color: score !== null ? color : '#6b7280' }} />
+                    {domain}
+                    <ScorePill score={score} />
+                  </button>
+                );
+              })}
             </div>
           </motion.div>
         </motion.div>
