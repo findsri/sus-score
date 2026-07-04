@@ -137,11 +137,15 @@ export default function HomePage() {
           </motion.div>
 
           <h1 className="text-5xl sm:text-6xl font-extrabold mb-5 leading-[1.1] tracking-tight">
-            The <span className="gradient-text">Dark Pattern</span><br />Detector
+            <span className="gradient-text">Sus Score</span>
           </h1>
 
+          <p className="text-text-secondary text-sm font-medium tracking-wide mb-3 max-w-xl mx-auto">
+            A dark pattern detector for the web
+          </p>
+
           <p className="text-text-secondary text-lg mb-3 max-w-xl mx-auto leading-relaxed">
-            Paste any URL. Get an <strong className="text-text-primary">Sus Score</strong>, a full breakdown of manipulative UX patterns, and the exact HTML fixes needed.
+            Paste any URL. Get a <strong className="text-text-primary">Sus Score</strong>, a full breakdown of manipulative UX patterns, and the exact HTML fixes needed.
           </p>
 
           <p className="text-sm text-muted mb-10 max-w-md mx-auto">

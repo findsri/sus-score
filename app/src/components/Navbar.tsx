@@ -24,9 +24,8 @@ export function Navbar() {
             <Shield className="w-4 h-4 text-white" />
           </div>
           <span className="font-bold text-sm hidden sm:block">
-            <span className="text-text-primary">Dark</span>
-            <span className="gradient-text">Pattern</span>
-            <span className="text-text-primary">Detector</span>
+            <span className="gradient-text">Sus</span>
+            <span className="text-text-primary"> Score</span>
           </span>
         </Link>
 

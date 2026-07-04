@@ -4,12 +4,12 @@ import { Navbar } from '@/components/Navbar';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
-  title: 'Sus Score — Expose Manipulative UX',
-  description: 'Scan any website or email for dark patterns. Get an Sus Score, visual overlays, and auto-generated reports.',
-  keywords: ['dark patterns', 'UX ethics', 'accessibility', 'web scanner', 'deceptive design'],
+  title: 'Sus Score — Dark Pattern Detector',
+  description: 'Scan any website or email for dark patterns. Get a Sus Score, visual overlays, and auto-generated fix reports.',
+  keywords: ['dark patterns', 'sus score', 'UX ethics', 'accessibility', 'web scanner', 'deceptive design'],
   openGraph: {
-    title: 'Sus Score',
-    description: 'Expose manipulative UX dark patterns on any website',
+    title: 'Sus Score — Dark Pattern Detector',
+    description: 'Expose manipulative dark patterns on any website. Get a Sus Score.',
     type: 'website',
   },
 };
