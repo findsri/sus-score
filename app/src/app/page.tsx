@@ -11,7 +11,7 @@ import { ScanResults } from './ScanResults';
 type InputMode = 'url' | 'html';
 
 const DEMO_SITES = [
-  { url: 'https://amazon.com', score: 82, label: '🔴 82 — Very Evil' },
+  { url: 'https://booking.com', score: 71, label: '🔴 71 — Very Shady' },
   { url: 'https://linkedin.com', score: 74, label: '🟠 74 — Manipulative' },
   { url: 'https://github.com', score: 8, label: '🟢 8 — Mostly Clean' },
 ];

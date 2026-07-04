@@ -8,12 +8,12 @@ import { getScoreColor } from '@/lib/utils';
 
 // Demo data for pre-seeded domains
 const DEMO_TIMELINES: Record<string, TimelineEntry[]> = {
-  'amazon.com': [
-    { evil_score: 70, total_patterns: 8, scanned_at: '2024-01-15T00:00:00Z' },
-    { evil_score: 74, total_patterns: 9, scanned_at: '2024-02-15T00:00:00Z' },
-    { evil_score: 78, total_patterns: 10, scanned_at: '2024-03-15T00:00:00Z' },
-    { evil_score: 79, total_patterns: 10, scanned_at: '2024-04-15T00:00:00Z' },
-    { evil_score: 82, total_patterns: 11, scanned_at: '2024-05-15T00:00:00Z' },
+  'booking.com': [
+    { evil_score: 55, total_patterns: 6, scanned_at: '2024-01-15T00:00:00Z' },
+    { evil_score: 60, total_patterns: 7, scanned_at: '2024-02-15T00:00:00Z' },
+    { evil_score: 65, total_patterns: 8, scanned_at: '2024-03-15T00:00:00Z' },
+    { evil_score: 70, total_patterns: 9, scanned_at: '2024-04-15T00:00:00Z' },
+    { evil_score: 76, total_patterns: 10, scanned_at: '2024-05-15T00:00:00Z' },
     { evil_score: 82, total_patterns: 11, scanned_at: '2024-06-15T00:00:00Z' },
   ],
   'linkedin.com': [
@@ -53,13 +53,13 @@ const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<
 };
 
 export default function TimelinePage() {
-  const [domain, setDomain] = useState('amazon.com');
-  const [inputDomain, setInputDomain] = useState('amazon.com');
+  const [domain, setDomain] = useState('booking.com');
+  const [inputDomain, setInputDomain] = useState('booking.com');
   const [timeline, setTimeline] = useState<TimelineEntry[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    loadTimeline('amazon.com');
+    loadTimeline('booking.com');
   }, []);
 
   async function loadTimeline(d: string) {
@@ -111,7 +111,7 @@ export default function TimelinePage() {
               value={inputDomain}
               onChange={e => setInputDomain(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && loadTimeline(inputDomain.trim())}
-              placeholder="enter domain (e.g. amazon.com)"
+              placeholder="enter domain (e.g. booking.com)"
               className="w-full bg-background border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm placeholder:text-muted focus:outline-none focus:border-accent"
               aria-label="Domain to view timeline for"
             />

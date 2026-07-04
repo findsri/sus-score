@@ -7,7 +7,7 @@ import { getScoreColor, getScoreLabel } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 
 const SEED_DATA: LeaderboardEntry[] = [
-  { domain: 'amazon.com',      latest_evil_score: 82, worst_score: 87, best_score: 75, scan_count: 142, last_scanned_at: new Date().toISOString() },
+  { domain: 'booking.com',     latest_evil_score: 82, worst_score: 87, best_score: 75, scan_count: 142, last_scanned_at: new Date().toISOString() },
   { domain: 'linkedin.com',    latest_evil_score: 74, worst_score: 78, best_score: 65, scan_count: 98,  last_scanned_at: new Date().toISOString() },
   { domain: 'booking.com',     latest_evil_score: 71, worst_score: 76, best_score: 60, scan_count: 67,  last_scanned_at: new Date().toISOString() },
   { domain: 'ticketmaster.com',latest_evil_score: 68, worst_score: 72, best_score: 55, scan_count: 45,  last_scanned_at: new Date().toISOString() },

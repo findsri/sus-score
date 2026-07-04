@@ -1,9 +1,9 @@
 import { ScanResponse } from './api';
 
 export const DEMO_SCANS: Record<string, ScanResponse> = {
-  'amazon.com': {
-    scanId: 'demo-amazon',
-    url: 'https://amazon.com',
+  'booking.com': {
+    scanId: 'demo-booking',
+    url: 'https://booking.com',
     scannedAt: new Date().toISOString(),
     evilScore: 82,
     totalPatterns: 11,
@@ -21,29 +21,28 @@ export const DEMO_SCANS: Record<string, ScanResponse> = {
     patterns: [
       {
         id: 'p1', category: 'confirm_shaming', severity: 'high',
-        description: '"No thanks, I enjoy paying full price" — decline button on Prime upsell popup',
-        element: '<a style="font-size:11px;color:#999">No thanks, I enjoy paying full price</a>',
-        selector: 'a', details: { text: 'No thanks, I enjoy paying full price' },
+        description: '"No thanks, I prefer paying more" — decline button on discount popup',
+        element: '<a style="font-size:11px;color:#999">No thanks, I prefer paying more</a>',
+        selector: 'a', details: { text: 'No thanks, I prefer paying more' },
         fixSuggestion: 'Replace with neutral "No thanks" or "Not now".',
         fixedElement: '<a style="font-size:14px;color:#333;text-decoration:underline">No thanks</a>',
       },
       {
-        id: 'p2', category: 'low_contrast', severity: 'high',
-        description: 'Unsubscribe link has contrast ratio of 1.8:1 — WCAG requires 4.5:1 minimum',
-        element: '<a href="/unsubscribe" style="color:#aaaaaa;background:#ffffff;font-size:10px">Unsubscribe</a>',
-        selector: 'a[href*="unsubscribe"]',
-        details: { contrastRatio: 1.8, color: '#aaaaaa', background: '#ffffff' },
-        fixSuggestion: 'Change text color to #555555 or darker to achieve 4.5:1 contrast.',
-        fixedElement: '<a href="/unsubscribe" style="color:#444444;font-size:12px;text-decoration:underline">Unsubscribe</a>',
+        id: 'p2', category: 'misleading_label', severity: 'high',
+        description: '"Only 2 rooms left at this price!" shown persistently regardless of actual availability',
+        element: '<span class="urgency-label">Only 2 rooms left at this price!</span>',
+        selector: '.urgency-label',
+        details: { text: 'Only 2 rooms left at this price!' },
+        fixSuggestion: 'Only display real-time availability counts that are accurate.',
       },
       {
         id: 'p3', category: 'misleading_label', severity: 'high',
-        description: 'Pre-ticked "Keep me subscribed to Deals & Offers" checkbox in account settings',
-        element: '<input type="checkbox" checked name="marketing"> Keep me subscribed to all partner Deals & Offers',
+        description: 'Pre-ticked "Send me deals and special offers by email" checkbox during checkout',
+        element: '<input type="checkbox" checked name="marketing"> Send me deals and special offers by email',
         selector: 'input[type="checkbox"][checked]',
-        details: { label: 'Keep me subscribed to all partner Deals & Offers' },
+        details: { label: 'Send me deals and special offers by email' },
         fixSuggestion: 'Marketing opt-in checkboxes must be unchecked by default (GDPR Article 7).',
-        fixedElement: '<input type="checkbox" name="marketing"> Keep me subscribed to Deals & Offers',
+        fixedElement: '<input type="checkbox" name="marketing"> Send me deals and special offers by email',
       },
       {
         id: 'p4', category: 'tiny_font', severity: 'high',
@@ -56,24 +55,25 @@ export const DEMO_SCANS: Record<string, ScanResponse> = {
       },
       {
         id: 'p5', category: 'buried_in_footer', severity: 'medium',
-        description: 'Unsubscribe from marketing emails only accessible via footer — 4 scrolls from top',
+        description: 'Unsubscribe from marketing emails only accessible via footer — buried below dozens of links',
         element: '<footer><small><a href="/unsubscribe">Unsubscribe</a></small></footer>',
         selector: 'footer a',
         details: {},
         fixSuggestion: 'Provide unsubscribe access in account settings, not only the footer.',
       },
       {
-        id: 'p6', category: 'misleading_label', severity: 'medium',
-        description: '"Only 3 left in stock" shown on a product with 500+ units — artificial scarcity',
-        element: '<span class="availability">Only 3 left in stock — order soon</span>',
-        selector: '.availability',
-        details: { text: 'Only 3 left in stock — order soon' },
-        fixSuggestion: 'Only display accurate real-time stock data. False scarcity is deceptive.',
+        id: 'p6', category: 'low_contrast', severity: 'high',
+        description: 'Unsubscribe link has contrast ratio of 1.8:1 — WCAG requires 4.5:1 minimum',
+        element: '<a href="/unsubscribe" style="color:#aaaaaa;background:#ffffff;font-size:10px">Unsubscribe</a>',
+        selector: 'a[href*="unsubscribe"]',
+        details: { contrastRatio: 1.8, color: '#aaaaaa', background: '#ffffff' },
+        fixSuggestion: 'Change text color to #555555 or darker to achieve 4.5:1 contrast.',
+        fixedElement: '<a href="/unsubscribe" style="color:#444444;font-size:12px;text-decoration:underline">Unsubscribe</a>',
       },
     ],
     diff: [
       {
-        original: '<a style="font-size:11px;color:#999">No thanks, I enjoy paying full price</a>',
+        original: '<a style="font-size:11px;color:#999">No thanks, I prefer paying more</a>',
         fixed: '<a style="font-size:14px;color:#333;text-decoration:underline">No thanks</a>',
         description: 'Remove confirm-shaming language — replace with neutral "No thanks"',
       },
@@ -88,7 +88,7 @@ export const DEMO_SCANS: Record<string, ScanResponse> = {
         description: 'Remove pre-checked state from marketing opt-in checkbox (GDPR compliance)',
       },
     ],
-    linkedInPost: `🚫 I scanned amazon.com and found 11 dark patterns. Here's what they don't want you to see 👇\n\n🎯 Evil Score: 82/100\n████████░░ 82%\n\nTop dark patterns found:\n\n1. 🚨 Confirm-Shaming Language\n   "No thanks, I enjoy paying full price" on the Prime upsell popup\n\n2. ⚠️ Low Contrast Unsubscribe Link\n   Contrast ratio of 1.8:1 — WCAG requires 4.5:1 minimum\n\n3. ⚠️ Pre-ticked Marketing Checkbox\n   "Keep me subscribed to all partner Deals & Offers" — opt-in by default\n\nThis is not a bug. It's intentional design to trap users.\n\n👉 Try the scanner yourself: https://github.com/findsri/dark-pattern-detector\n\n#DarkPatterns #UX #Ethics #WebDesign #AI #Accessibility`,
+    linkedInPost: `🚫 I scanned booking.com and found 11 dark patterns. Here's what they don't want you to see 👇\n\n🎯 Evil Score: 82/100\n████████░░ 82%\n\nTop dark patterns found:\n\n1. 🚨 Confirm-Shaming: "No thanks, I prefer paying more"\n\n2. ⚠️ Fake Scarcity: "Only 2 rooms left!" — shown regardless of availability\n\n3. ⚠️ Pre-ticked marketing email checkbox during checkout\n\nThis is not a bug. It's intentional design to trap users.\n\n👉 Try the scanner: https://github.com/findsri/dark-pattern-detector\n\n#DarkPatterns #UX #Ethics #WebDesign #AI #Accessibility`,
   },
 
   'linkedin.com': {
