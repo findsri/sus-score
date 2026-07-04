@@ -141,6 +141,58 @@ function isUnsubEl($: cheerio.CheerioAPI, el: cheerio.Element): boolean {
          UNSUB_HREF.some(k => href.includes(k));
 }
 
+// ── Read computed styles injected by extension content.js ─────────────────────
+// Extension annotates elements with data-dpd-color, data-dpd-bg, etc.
+// We use these when available — they reflect the REAL computed styles.
+interface ComputedInfo {
+  color?: string;
+  bg?: string;
+  fontSize?: number;
+  display?: string;
+  visibility?: string;
+  opacity?: number;
+  textDecoration?: string;
+  offScreen?: boolean;
+}
+
+function getComputed($: cheerio.CheerioAPI, el: cheerio.Element): ComputedInfo {
+  const $el = $(el);
+  const info: ComputedInfo = {};
+
+  const color   = $el.attr('data-dpd-color');
+  const bg      = $el.attr('data-dpd-bg');
+  const fsRaw   = $el.attr('data-dpd-fontsize');
+  const display = $el.attr('data-dpd-display');
+  const vis     = $el.attr('data-dpd-visibility');
+  const opRaw   = $el.attr('data-dpd-opacity');
+  const tdec    = $el.attr('data-dpd-textdec');
+  const offscr  = $el.attr('data-dpd-offscreen');
+
+  if (color)   info.color       = color;
+  if (bg)      info.bg          = bg;
+  if (fsRaw)   info.fontSize    = parseFloat(fsRaw);
+  if (display) info.display     = display;
+  if (vis)     info.visibility  = vis;
+  if (opRaw)   info.opacity     = parseFloat(opRaw);
+  if (tdec)    info.textDecoration = tdec;
+  if (offscr)  info.offScreen   = offscr === '1';
+
+  // Fall back to inline style if no computed data available
+  if (!color && !bg) {
+    const st = parseStyle($el.attr('style') || '');
+    if (st['color'])            info.color          = st['color'];
+    if (st['background-color']) info.bg             = st['background-color'];
+    if (st['background'])       info.bg             = info.bg || st['background'];
+    if (st['font-size'])        info.fontSize       = parseFloat(st['font-size']);
+    if (st['display'])          info.display        = st['display'];
+    if (st['visibility'])       info.visibility     = st['visibility'];
+    if (st['opacity'])          info.opacity        = parseFloat(st['opacity']);
+    if (st['text-decoration'])  info.textDecoration = st['text-decoration'];
+  }
+
+  return info;
+}
+
 // ── Main detector — works on real-world HTML (classes, not just inline) ───────
 
 function detectPatterns(html: string, sourceUrl?: string): DetectedPattern[] {
@@ -155,34 +207,29 @@ function detectPatterns(html: string, sourceUrl?: string): DetectedPattern[] {
     patterns.push(p);
   }
 
-  // ── 1. Low contrast on opt-out elements (inline style) ────────────────────
+  // ── 1. Low contrast on opt-out elements (inline style OR computed) ──────────
   $('a, button, span, small, p').each((_, el) => {
     if (!isUnsubEl($, el)) return;
-    const $el = $(el);
-    const st = parseStyle($el.attr('style') || '');
-    const ratio = contrastRatio(
-      st['color'] || '#000000',
-      st['background-color'] || st['background'] || '#ffffff'
-    );
+    const c = getComputed($, el);
+    const ratio = contrastRatio(c.color || '#000000', c.bg || '#ffffff');
     if (ratio !== null && ratio < 4.5) {
       const sev: Severity = ratio < 1.5 ? 'critical' : ratio < 3 ? 'high' : 'medium';
       add({ id: uid(), category: 'low_contrast', severity: sev,
         description: `Opt-out element has contrast ratio ${ratio.toFixed(2)}:1 (WCAG min 4.5:1)`,
         element: elSnippet($, el), selector: el.tagName,
-        details: { contrastRatio: ratio.toFixed(2), color: st['color'], bg: st['background-color'] },
+        details: { contrastRatio: ratio.toFixed(2), color: c.color, bg: c.bg },
         fixSuggestion: 'Increase text contrast to at least 4.5:1.',
         fixedElement: elSnippet($, el).replace(/color\s*:[^;"]*/i, 'color: #1a1a1a'),
       });
     }
   });
 
-  // ── 2. Tiny font-size (inline style) ──────────────────────────────────────
+  // ── 2. Tiny font-size (computed OR inline) ────────────────────────────────
   $('a, button, span, small, p').each((_, el) => {
     if (!isUnsubEl($, el)) return;
-    const st = parseStyle($(el).attr('style') || '');
-    const fs = st['font-size'] || '';
-    const px = parseFloat(fs);
-    if (fs && !isNaN(px) && px > 0 && px < 11) {
+    const c = getComputed($, el);
+    const px = c.fontSize ?? 0;
+    if (px > 0 && px < 11) {
       add({ id: uid(), category: 'tiny_font', severity: px < 7 ? 'critical' : 'high',
         description: `Opt-out text is ${px}px — designed to be missed (min readable: 12px)`,
         element: elSnippet($, el), selector: el.tagName, details: { fontSize: px },
@@ -192,18 +239,15 @@ function detectPatterns(html: string, sourceUrl?: string): DetectedPattern[] {
     }
   });
 
-  // ── 3. Hidden via inline CSS ───────────────────────────────────────────────
+  // ── 3. Hidden via computed display/visibility ─────────────────────────────
   $('a, button').each((_, el) => {
     if (!isUnsubEl($, el)) return;
-    const st = parseStyle($(el).attr('style') || '');
-    const left = parseFloat(st['left'] || '0');
-    const top  = parseFloat(st['top']  || '0');
-    if (st['display']==='none' || st['visibility']==='hidden' ||
-        (st['position']==='absolute' && (left<-999||top<-999))) {
+    const c = getComputed($, el);
+    if (c.display === 'none' || c.visibility === 'hidden' || c.offScreen) {
       add({ id: uid(), category: 'hidden_element', severity: 'critical',
-        description: 'Opt-out button is hidden with CSS — users cannot see it',
-        element: elSnippet($, el), selector: el.tagName, details: { style: st },
-        fixSuggestion: 'Remove display:none/visibility:hidden from opt-out elements.',
+        description: 'Opt-out button is not visible on screen (hidden via CSS)',
+        element: elSnippet($, el), selector: el.tagName, details: { ...c },
+        fixSuggestion: 'Make the unsubscribe link visible to users.',
       });
     }
   });
@@ -221,12 +265,12 @@ function detectPatterns(html: string, sourceUrl?: string): DetectedPattern[] {
     }
   });
 
-  // ── 5. Near-zero opacity (inline) ─────────────────────────────────────────
+  // ── 5. Near-zero opacity (computed OR inline) ────────────────────────────
   $('a, button, span').each((_, el) => {
     if (!isUnsubEl($, el)) return;
-    const st = parseStyle($(el).attr('style') || '');
-    const op = parseFloat(st['opacity'] ?? '1');
-    if (!isNaN(op) && op < 0.3) {
+    const c = getComputed($, el);
+    const op = c.opacity ?? 1;
+    if (op < 0.3) {
       add({ id: uid(), category: 'opacity_hidden', severity: op < 0.1 ? 'critical' : 'high',
         description: `Opt-out element has opacity ${op} — nearly invisible to users`,
         element: elSnippet($, el), selector: el.tagName, details: { opacity: op },
@@ -236,15 +280,16 @@ function detectPatterns(html: string, sourceUrl?: string): DetectedPattern[] {
     }
   });
 
-  // ── 6. No underline (text-decoration:none) on links ───────────────────────
+  // ── 6. No underline (computed OR inline text-decoration) ─────────────────
   $('a').each((_, el) => {
     if (!isUnsubEl($, el)) return;
-    const st = parseStyle($(el).attr('style') || '');
-    if ((st['text-decoration']||'').includes('none')) {
+    const c = getComputed($, el);
+    const td = (c.textDecoration || '').toLowerCase();
+    if (td.includes('none')) {
       add({ id: uid(), category: 'no_styling', severity: 'medium',
-        description: 'Unsubscribe link has text-decoration:none — looks like plain text',
+        description: 'Unsubscribe link has no underline — looks like plain text, not clickable',
         element: elSnippet($, el), selector: 'a', details: {},
-        fixSuggestion: 'Add underline or button style to make opt-out links visually distinct.',
+        fixSuggestion: 'Add underline or button style to opt-out links.',
         fixedElement: elSnippet($, el).replace(/text-decoration\s*:\s*none/i, 'text-decoration: underline'),
       });
     }
@@ -364,24 +409,33 @@ function detectPatterns(html: string, sourceUrl?: string): DetectedPattern[] {
     });
   }
 
-  // ── 15. Inline-style color tricks (light-on-light, dark-on-dark) ─────────
-  // Find any element with both color and bg set to similar luminance
-  $('[style*="color"]').each((_, el) => {
-    const st = parseStyle($(el).attr('style') || '');
-    const fg = st['color'], bg = st['background-color'] || st['background'];
-    if (!fg || !bg) return;
-    const ratio = contrastRatio(fg, bg);
-    if (ratio !== null && ratio < 2) {
-      const text = ($(el).text()||'').trim().toLowerCase();
-      if (text.length > 2) {
-        add({ id: uid(), category: 'low_contrast', severity: 'high',
-          description: `Element with text "${text.slice(0,40)}" has contrast ratio ${ratio.toFixed(2)}:1 — near invisible`,
-          element: elSnippet($, el), selector: el.tagName,
-          details: { contrastRatio: ratio.toFixed(2), color: fg, background: bg },
-          fixSuggestion: 'Increase contrast to at least 4.5:1.',
-        });
-      }
+  // ── 15. Computed-style low contrast (from extension data-dpd attributes) ────
+  // This catches cases where CSS classes make text near-invisible —
+  // only detectable via computed styles from the real browser.
+  $('[data-dpd-color]').each((_, el) => {
+    const c = getComputed($, el);
+    if (!c.color || !c.bg) return;
+    const ratio = contrastRatio(c.color, c.bg);
+    if (ratio !== null && ratio < 3) {
+      const text = ($(el).text() || '').trim().toLowerCase();
+      if (text.length < 2) return;
+      add({ id: uid(), category: 'low_contrast', severity: ratio < 1.5 ? 'critical' : 'high',
+        description: `"${text.slice(0,40)}" has computed contrast ${ratio.toFixed(2)}:1 — text is near invisible`,
+        element: elSnippet($, el), selector: el.tagName,
+        details: { contrastRatio: ratio.toFixed(2), color: c.color, bg: c.bg, source: 'computed' },
+        fixSuggestion: 'Increase contrast ratio to at least 4.5:1 for all text.',
+      });
     }
+  });
+
+  // ── 16. Off-screen elements flagged by extension ─────────────────────────
+  $('[data-dpd-offscreen="1"]').each((_, el) => {
+    if (!isUnsubEl($, el)) return;
+    add({ id: uid(), category: 'off_screen', severity: 'critical',
+      description: 'Opt-out element is off-screen (zero width/height in real browser layout)',
+      element: elSnippet($, el), selector: el.tagName, details: {},
+      fixSuggestion: 'Ensure the unsubscribe element is visible and in the normal document flow.',
+    });
   });
 
   // ── 16. Page-level structural signals ────────────────────────────────────
