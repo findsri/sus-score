@@ -9,14 +9,14 @@ leaderboardRouter.get('/', async (_req: Request, res: Response) => {
     const result = await pool.query(`
       SELECT
         domain,
-        latest_evil_score,
+        latest_sus_score,
         worst_score,
         best_score,
         scan_count,
         last_scanned_at,
         created_at
       FROM hall_of_shame
-      ORDER BY latest_evil_score DESC
+      ORDER BY latest_sus_score DESC
       LIMIT 50
     `);
     return res.json({ entries: result.rows });
@@ -30,7 +30,7 @@ leaderboardRouter.get('/timeline/:domain', async (req: Request, res: Response) =
   const { domain } = req.params;
   try {
     const result = await pool.query(`
-      SELECT evil_score, total_patterns, scanned_at
+      SELECT sus_score, total_patterns, scanned_at
       FROM timeline_scans
       WHERE domain = $1
       ORDER BY scanned_at ASC
@@ -46,7 +46,7 @@ leaderboardRouter.get('/timeline/:domain', async (req: Request, res: Response) =
 leaderboardRouter.get('/recent', async (_req: Request, res: Response) => {
   try {
     const result = await pool.query(`
-      SELECT id, url, evil_score, total_patterns, is_email, created_at
+      SELECT id, url, sus_score, total_patterns, is_email, created_at
       FROM scans
       WHERE url IS NOT NULL
       ORDER BY created_at DESC

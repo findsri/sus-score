@@ -19,13 +19,13 @@ export function generateLinkedInPost(result: ScanResult, appUrl = 'https://darkp
     })
     .slice(0, 3);
 
-  const opener = result.evilScore >= 70
+  const opener = result.susScore >= 70
     ? `🚫 I scanned ${siteName} and found ${result.totalPatterns} dark patterns. Here's what they don't want you to see 👇`
-    : result.evilScore >= 40
+    : result.susScore >= 40
     ? `⚠️ I scanned ${siteName} and uncovered ${result.totalPatterns} suspicious UX patterns. Thread 👇`
     : `🔍 I ran a dark pattern audit on ${siteName}. Here's the full breakdown 👇`;
 
-  const scoreSection = `\n\n🎯 Evil Score: ${result.evilScore}/100\n${'█'.repeat(Math.round(result.evilScore / 10))}${'░'.repeat(10 - Math.round(result.evilScore / 10))} ${result.evilScore}%`;
+  const scoreSection = `\n\n🎯 Sus Score: ${result.susScore}/100\n${'█'.repeat(Math.round(result.susScore / 10))}${'░'.repeat(10 - Math.round(result.susScore / 10))} ${result.susScore}%`;
 
   const patternLines = topPatterns.map((p, i) =>
     `\n${i + 1}. ${SEVERITY_EMOJI[p.severity]} ${formatCategory(p.category)}\n   "${p.description.slice(0, 100)}"`
@@ -35,7 +35,7 @@ export function generateLinkedInPost(result: ScanResult, appUrl = 'https://darkp
     ? `\n\nTop dark patterns found:\n${patternLines}`
     : '\n\nNo major dark patterns detected — a rare ethical win! 🎉';
 
-  const cta = `\n\n👉 Try the scanner yourself: ${appUrl}\n\nScan your own site and see where you land on the Evil Score.`;
+  const cta = `\n\n👉 Try the scanner yourself: ${appUrl}\n\nScan your own site and see where you land on the Sus Score.`;
 
   const hashtags = `\n\n#DarkPatterns #UX #Ethics #WebDesign #AI #Accessibility #UserExperience #DesignEthics`;
 

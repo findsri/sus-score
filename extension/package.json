@@ -1,7 +1,7 @@
 {
   "name": "dark-pattern-extension",
   "version": "1.0.0",
-  "description": "Chrome extension for Dark Pattern Detector",
+  "description": "Chrome extension for Sus Score",
   "scripts": {
     "build": "echo 'Extension uses vanilla JS — no build step needed'"
   }

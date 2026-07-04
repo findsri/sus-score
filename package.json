@@ -1,5 +1,5 @@
 {
-  "name": "dark-pattern-detector",
+  "name": "sus-score",
   "version": "1.0.0",
   "private": true,
   "workspaces": [

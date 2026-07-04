@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ScanResult } from '@dark-pattern-detector/detector';
+import { ScanResult } from '@sus-score/detector';
 
 // Express backend (optional — used for screenshots, DB persistence, leaderboard)
 const EXPRESS_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
@@ -54,7 +54,7 @@ export async function getScan(id: string): Promise<ScanResponse> {
 
 export interface LeaderboardEntry {
   domain: string;
-  latest_evil_score: number;
+  latest_sus_score: number;
   worst_score: number;
   best_score: number;
   scan_count: number;
@@ -67,7 +67,7 @@ export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
 }
 
 export interface TimelineEntry {
-  evil_score: number;
+  sus_score: number;
   total_patterns: number;
   scanned_at: string;
 }

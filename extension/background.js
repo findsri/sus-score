@@ -11,7 +11,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (!tabId) return;
 
     const result = {
-      evilScore: message.score ?? 0,
+      susScore: message.score ?? 0,
       patterns: message.patterns ?? [],
       totalPatterns: message.totalPatterns ?? 0,
       url: message.url,
@@ -19,13 +19,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     scanCache.set(tabId, result);
 
-    const score = result.evilScore;
+    const score = result.susScore;
     const color = score >= 70 ? '#ef4444' : score >= 40 ? '#f59e0b' : '#10b981';
     const text  = score > 0 ? String(score) : '';
 
     chrome.action.setBadgeText({ text, tabId });
     chrome.action.setBadgeBackgroundColor({ color, tabId });
-    chrome.action.setTitle({ title: `Evil Score: ${score}/100 — ${result.totalPatterns} dark patterns`, tabId });
+    chrome.action.setTitle({ title: `Sus Score: ${score}/100 — ${result.totalPatterns} dark patterns`, tabId });
     return;
   }
 
@@ -54,11 +54,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .then(data => {
         if (tabId) {
           scanCache.set(tabId, data);
-          const score = data.evilScore ?? 0;
+          const score = data.susScore ?? 0;
           const color = score >= 70 ? '#ef4444' : score >= 40 ? '#f59e0b' : '#10b981';
           chrome.action.setBadgeText({ text: score > 0 ? String(score) : '', tabId });
           chrome.action.setBadgeBackgroundColor({ color, tabId });
-          chrome.action.setTitle({ title: `Evil Score: ${score}/100`, tabId });
+          chrome.action.setTitle({ title: `Sus Score: ${score}/100`, tabId });
         }
         sendResponse({ success: true, data });
       })

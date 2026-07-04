@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { z } from 'zod';
-import { scan, generateFixedHtml } from '@dark-pattern-detector/detector';
+import { scan, generateFixedHtml } from '@sus-score/detector';
 import { screenshotUrl, screenshotHtml } from '../screenshot';
 import { pool, upsertHallOfShame, insertTimelineScan } from '../db';
 
@@ -70,12 +70,12 @@ scanRouter.post('/', async (req: Request, res: Response) => {
 
     // Persist to DB
     const dbResult = await pool.query(`
-      INSERT INTO scans (url, evil_score, total_patterns, score_breakdown, patterns, screenshot_base64, clean_screenshot_base64, linkedin_post, is_email)
+      INSERT INTO scans (url, sus_score, total_patterns, score_breakdown, patterns, screenshot_base64, clean_screenshot_base64, linkedin_post, is_email)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
       RETURNING id
     `, [
       url ?? null,
-      result.evilScore,
+      result.susScore,
       result.totalPatterns,
       JSON.stringify(result.scoreBreakdown),
       JSON.stringify(result.patterns),
@@ -91,8 +91,8 @@ scanRouter.post('/', async (req: Request, res: Response) => {
     if (url) {
       try {
         const domain = new URL(url).hostname.replace('www.', '');
-        await upsertHallOfShame(domain, result.evilScore);
-        await insertTimelineScan(domain, result.evilScore, result.totalPatterns, scanId);
+        await upsertHallOfShame(domain, result.susScore);
+        await insertTimelineScan(domain, result.susScore, result.totalPatterns, scanId);
       } catch (err) {
         console.warn('Hall of shame update failed:', err);
       }
@@ -122,7 +122,7 @@ scanRouter.get('/:id', async (req: Request, res: Response) => {
     return res.json({
       scanId: row.id,
       url: row.url,
-      evilScore: row.evil_score,
+      susScore: row.sus_score,
       totalPatterns: row.total_patterns,
       scoreBreakdown: row.score_breakdown,
       patterns: row.patterns,

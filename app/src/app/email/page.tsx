@@ -48,7 +48,7 @@ export default function EmailScannerPage() {
     try {
       const data = await runScan({ html: htmlInput.trim(), isEmail: true });
       setResult(data);
-      toast.success(`Email scan complete — Evil Score: ${data.evilScore}/100`);
+      toast.success(`Email scan complete — Sus Score: ${data.susScore}/100`);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Scan failed. Please try again.';
       setError(msg);

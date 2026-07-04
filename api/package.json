@@ -8,7 +8,7 @@
     "start": "node dist/server.js"
   },
   "dependencies": {
-    "@dark-pattern-detector/detector": "file:../packages/detector",
+    "@sus-score/detector": "file:../packages/detector",
     "express": "^4.18.2",
     "cors": "^2.8.5",
     "helmet": "^7.1.0",

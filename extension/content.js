@@ -1,5 +1,5 @@
 /**
- * Dark Pattern Detector — Content Script
+ * Sus Score — Content Script
  *
  * Runs inside the real browser page, so it has access to:
  *  - The full rendered DOM (no WAF, no bot detection)
@@ -75,7 +75,7 @@
   }
 
   /**
-   * Inject a floating badge on the page showing the Evil Score.
+   * Inject a floating badge on the page showing the Sus Score.
    */
   function injectBadge(score, patternCount) {
     const existing = document.getElementById('__dpd-badge');
@@ -111,7 +111,7 @@
       transition: transform 0.15s ease, box-shadow 0.15s ease !important;
       user-select: none !important;
     `;
-    badge.title = `Dark Pattern Detector — ${patternCount} patterns found. Click to open full report.`;
+    badge.title = `Sus Score — ${patternCount} patterns found. Click to open full report.`;
     badge.onclick = () => window.open('http://localhost:3000', '_blank');
     badge.onmouseenter = () => {
       badge.style.transform = 'scale(1.06) translateY(-2px)';
@@ -151,7 +151,7 @@
       // Notify background script to update the toolbar badge
       chrome.runtime.sendMessage({
         type: 'SCAN_COMPLETE',
-        score: data.evilScore ?? 0,
+        score: data.susScore ?? 0,
         patterns: data.patterns ?? [],
         totalPatterns: data.totalPatterns ?? 0,
         url,
@@ -159,11 +159,11 @@
       });
 
       // Show floating badge on the page
-      injectBadge(data.evilScore ?? 0, data.totalPatterns ?? 0);
+      injectBadge(data.susScore ?? 0, data.totalPatterns ?? 0);
 
     } catch (err) {
       // Silently fail — don't disrupt the page
-      console.debug('[DarkPatternDetector] scan failed:', err.message);
+      console.debug('[SusScore] scan failed:', err.message);
     }
   }
 

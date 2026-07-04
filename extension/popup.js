@@ -35,7 +35,7 @@ function renderResults(data) {
   const resultsEl = document.getElementById('results');
   resultsEl.style.display = 'block';
 
-  const score    = data.evilScore ?? 0;
+  const score    = data.susScore ?? 0;
   const color    = getScoreColor(score);
   const label    = getScoreLabel(score);
   const patterns = data.patterns ?? [];
@@ -170,7 +170,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       // Cache it in background
       chrome.runtime.sendMessage({
         type: 'SCAN_COMPLETE',
-        score: data.evilScore,
+        score: data.susScore,
         patterns: data.patterns,
         totalPatterns: data.totalPatterns,
         url,

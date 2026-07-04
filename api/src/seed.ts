@@ -22,7 +22,7 @@ const SEED_DOMAINS = [
 const AMAZON_SCAN = {
   id: uuidv4(),
   url: 'https://amazon.com',
-  evil_score: 82,
+  sus_score: 82,
   total_patterns: 11,
   score_breakdown: {
     low_contrast: 18,
@@ -67,7 +67,7 @@ const AMAZON_SCAN = {
       fixSuggestion: 'Opt-in checkboxes must be unchecked by default (GDPR requirement)',
     },
   ],
-  linkedin_post: `🚫 I scanned amazon.com and found 11 dark patterns. Here's what they don't want you to see 👇\n\n🎯 Evil Score: 82/100\n████████░░ 82%\n\nTop dark patterns found:\n\n1. 🚨 Confirm-Shaming Language\n   "No thanks, I enjoy paying full price" decline button\n\n2. ⚠️ Low Contrast Unsubscribe Link\n   Contrast ratio of 1.8:1 (needs 4.5:1)\n\n3. 🟡 Misleading Label / Trick Question\n   Pre-ticked marketing checkbox\n\n👉 Try the scanner yourself: https://darkpatterndetector.app\n\n#DarkPatterns #UX #Ethics #WebDesign #AI`,
+  linkedin_post: `🚫 I scanned amazon.com and found 11 dark patterns. Here's what they don't want you to see 👇\n\n🎯 Sus Score: 82/100\n████████░░ 82%\n\nTop dark patterns found:\n\n1. 🚨 Confirm-Shaming Language\n   "No thanks, I enjoy paying full price" decline button\n\n2. ⚠️ Low Contrast Unsubscribe Link\n   Contrast ratio of 1.8:1 (needs 4.5:1)\n\n3. 🟡 Misleading Label / Trick Question\n   Pre-ticked marketing checkbox\n\n👉 Try the scanner yourself: https://darkpatterndetector.app\n\n#DarkPatterns #UX #Ethics #WebDesign #AI`,
   is_email: false,
 };
 
@@ -75,7 +75,7 @@ const AMAZON_SCAN = {
 const NEWSLETTER_SCAN = {
   id: uuidv4(),
   url: null,
-  evil_score: 71,
+  sus_score: 71,
   total_patterns: 7,
   score_breakdown: {
     low_contrast: 20,
@@ -99,13 +99,13 @@ async function seed() {
   // Insert sample scans
   for (const scanData of [AMAZON_SCAN, NEWSLETTER_SCAN]) {
     await pool.query(`
-      INSERT INTO scans (id, url, evil_score, total_patterns, score_breakdown, patterns, linkedin_post, is_email)
+      INSERT INTO scans (id, url, sus_score, total_patterns, score_breakdown, patterns, linkedin_post, is_email)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       ON CONFLICT (id) DO NOTHING
     `, [
       scanData.id,
       scanData.url,
-      scanData.evil_score,
+      scanData.sus_score,
       scanData.total_patterns,
       JSON.stringify(scanData.score_breakdown),
       JSON.stringify(scanData.patterns ?? []),
@@ -126,7 +126,7 @@ async function seed() {
       const date = new Date(baseDate);
       date.setMonth(baseDate.getMonth() + i);
       await pool.query(`
-        INSERT INTO timeline_scans (domain, evil_score, total_patterns, scanned_at)
+        INSERT INTO timeline_scans (domain, sus_score, total_patterns, scanned_at)
         VALUES ($1, $2, $3, $4)
       `, [domain, scores[i], Math.round(scores[i] / 8), date.toISOString()]);
     }

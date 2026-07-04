@@ -1,14 +1,14 @@
-# Chrome Web Store Listing — Dark Pattern Detector
+# Chrome Web Store Listing — Sus Score
 
 ## Extension name
-Dark Pattern Detector
+Sus Score
 
 ## Short description (max 132 chars)
-Detects hidden unsubscribe buttons, confirm-shaming & manipulative UX on any site. Shows a real-time Evil Score.
+Detects hidden unsubscribe buttons, confirm-shaming & manipulative UX on any site. Shows a real-time Sus Score.
 
 ## Full description
 
-🕵️ **Dark Pattern Detector** — Expose manipulative UX on every website you visit.
+🕵️ **Sus Score** — Expose manipulative UX on every website you visit.
 
 Companies spend millions hiring designers NOT to make your life easier — but to make it harder to leave. This extension catches them in the act.
 
@@ -22,11 +22,11 @@ Companies spend millions hiring designers NOT to make your life easier — but t
 • Elements made invisible with CSS opacity or display:none
 
 **How it works:**
-Every page you visit is automatically scanned. An Evil Score (0–100) badge appears in the corner — red means manipulative, green means clean. Click the extension icon for the full breakdown with fix suggestions.
+Every page you visit is automatically scanned. An Sus Score (0–100) badge appears in the corner — red means manipulative, green means clean. Click the extension icon for the full breakdown with fix suggestions.
 
 **Features:**
 ✅ Real-time scanning — no manual action needed
-✅ Evil Score badge on every page
+✅ Sus Score badge on every page
 ✅ Full pattern breakdown with severity tags
 ✅ "Fix It" suggestions for every detected pattern
 ✅ Works on websites AND email newsletters
@@ -34,7 +34,7 @@ Every page you visit is automatically scanned. An Evil Score (0–100) badge app
 
 **Privacy:** All scanning happens locally. No data is sent to third parties. No account required.
 
-**Open source:** github.com/findsri/dark-pattern-detector
+**Open source:** github.com/findsri/sus-score
 
 ---
 
@@ -45,14 +45,14 @@ Productivity
 English
 
 ## Screenshots needed (prepare these manually):
-1. 1280x800 — Extension popup showing Evil Score gauge on booking.com
+1. 1280x800 — Extension popup showing Sus Score gauge on booking.com
 2. 1280x800 — Extension popup on linkedin.com with pattern list
 3. 1280x800 — Extension popup on github.com showing clean score
-4. 640x400 — Small promo tile: dark background, shield icon, "Evil Score 82" in red
+4. 640x400 — Small promo tile: dark background, shield icon, "Sus Score 82" in red
 
 ## Promo tile (440x280) text
 "Expose Dark Patterns
-Evil Score: 82/100
+Sus Score: 82/100
 Free • Open Source"
 
 ---
@@ -60,7 +60,7 @@ Free • Open Source"
 ## Submission checklist
 - [ ] Create developer account at https://chrome.google.com/webstore/devconsole
 - [ ] Pay one-time $5 developer fee
-- [ ] Upload dark-pattern-detector-extension.zip
+- [ ] Upload sus-score-extension.zip
 - [ ] Fill in store listing with description above
 - [ ] Upload 1-4 screenshots (1280x800 recommended)
 - [ ] Upload 440x280 promo tile image

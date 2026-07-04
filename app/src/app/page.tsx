@@ -50,11 +50,11 @@ export default function HomePage() {
   useEffect(() => {
     QUICK_SITES.forEach(({ url, domain }) => {
       runScan({ url })
-        .then(data => setLiveScores(prev => ({ ...prev, [domain]: data.evilScore })))
+        .then(data => setLiveScores(prev => ({ ...prev, [domain]: data.susScore })))
         .catch(() => {
           // Fallback to demo data score if API fails
           const demo = getDemoScan(url);
-          if (demo) setLiveScores(prev => ({ ...prev, [domain]: demo.evilScore }));
+          if (demo) setLiveScores(prev => ({ ...prev, [domain]: demo.susScore }));
         });
     });
   }, []);
@@ -76,7 +76,7 @@ export default function HomePage() {
         : { html: htmlInput.trim() };
       const data = await runScan(payload);
       setResult(data);
-      toast.success(`Scan complete — Evil Score: ${data.evilScore}/100`);
+      toast.success(`Scan complete — Sus Score: ${data.susScore}/100`);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Scan failed. Please try again.';
       setError(msg);
@@ -99,7 +99,7 @@ export default function HomePage() {
         setResult(demo);
         setIsDemoResult(true);
         setLoading(false);
-        toast.success(`Scan complete — Evil Score: ${demo.evilScore}/100`);
+        toast.success(`Scan complete — Sus Score: ${demo.susScore}/100`);
       }, 900);
     } else {
       const fakeEvent = { preventDefault: () => {} } as React.FormEvent;
@@ -141,7 +141,7 @@ export default function HomePage() {
           </h1>
 
           <p className="text-text-secondary text-lg mb-3 max-w-xl mx-auto leading-relaxed">
-            Paste any URL. Get an <strong className="text-text-primary">Evil Score</strong>, a full breakdown of manipulative UX patterns, and the exact HTML fixes needed.
+            Paste any URL. Get an <strong className="text-text-primary">Sus Score</strong>, a full breakdown of manipulative UX patterns, and the exact HTML fixes needed.
           </p>
 
           <p className="text-sm text-muted mb-10 max-w-md mx-auto">
@@ -327,7 +327,7 @@ export default function HomePage() {
             {[
               { value: '8', label: 'detection rules' },
               { value: '10+', label: 'sites in Hall of Shame' },
-              { value: '0–100', label: 'Evil Score range' },
+              { value: '0–100', label: 'Sus Score range' },
             ].map(({ value, label }) => (
               <div key={label}>
                 <div className="text-2xl font-extrabold gradient-text">{value}</div>

@@ -26,7 +26,7 @@ export interface DetectedPattern {
 export interface ScanResult {
   url?: string;
   scannedAt: string;
-  evilScore: number;          // 0–100
+  susScore: number;          // 0–100
   scoreBreakdown: Record<PatternCategory, number>;
   patterns: DetectedPattern[];
   totalPatterns: number;

@@ -44,7 +44,7 @@ async function start() {
   try {
     await initDb();
     app.listen(PORT, () => {
-      console.log(`🔍 Dark Pattern Detector API running on http://localhost:${PORT}`);
+      console.log(`🔍 Sus Score API running on http://localhost:${PORT}`);
     });
   } catch (err) {
     console.error('Failed to start server:', err);

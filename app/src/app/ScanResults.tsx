@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, BarChart2, Eye, Wrench, Linkedin, ExternalLink } from 'lucide-react';
 import { ScanResponse } from '@/lib/api';
-import { EvilScoreGauge } from '@/components/EvilScoreGauge';
+import { SusScoreGauge } from '@/components/SusScoreGauge';
 import { PatternCard } from '@/components/PatternCard';
 import { ScoreBreakdown } from '@/components/ScoreBreakdown';
 import { ScreenshotComparison } from '@/components/ScreenshotComparison';
@@ -33,7 +33,7 @@ export function ScanResults({ result }: ScanResultsProps) {
       {/* Score overview */}
       <div className="glass rounded-2xl p-6">
         <div className="flex flex-col md:flex-row items-center gap-8">
-          <EvilScoreGauge score={result.evilScore} size={220} />
+          <SusScoreGauge score={result.susScore} size={220} />
 
           <div className="flex-1 space-y-4">
             {result.url && (
@@ -52,7 +52,7 @@ export function ScanResults({ result }: ScanResultsProps) {
 
             <div className="grid grid-cols-3 gap-3">
               {[
-                { label: 'Evil Score', value: `${result.evilScore}/100`, color: result.evilScore >= 70 ? 'text-danger' : result.evilScore >= 40 ? 'text-warning' : 'text-success' },
+                { label: 'Sus Score', value: `${result.susScore}/100`, color: result.susScore >= 70 ? 'text-danger' : result.susScore >= 40 ? 'text-warning' : 'text-success' },
                 { label: 'Patterns Found', value: result.totalPatterns, color: 'text-text-primary' },
                 { label: 'Scanned', value: new Date(result.scannedAt).toLocaleDateString(), color: 'text-muted' },
               ].map(({ label, value, color }) => (

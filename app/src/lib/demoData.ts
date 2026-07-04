@@ -5,7 +5,7 @@ export const DEMO_SCANS: Record<string, ScanResponse> = {
     scanId: 'demo-booking',
     url: 'https://booking.com',
     scannedAt: new Date().toISOString(),
-    evilScore: 82,
+    susScore: 82,
     totalPatterns: 11,
     scoreBreakdown: {
       low_contrast: 18,
@@ -88,14 +88,14 @@ export const DEMO_SCANS: Record<string, ScanResponse> = {
         description: 'Remove pre-checked state from marketing opt-in checkbox (GDPR compliance)',
       },
     ],
-    linkedInPost: `🚫 I scanned booking.com and found 11 dark patterns. Here's what they don't want you to see 👇\n\n🎯 Evil Score: 82/100\n████████░░ 82%\n\nTop dark patterns found:\n\n1. 🚨 Confirm-Shaming: "No thanks, I prefer paying more"\n\n2. ⚠️ Fake Scarcity: "Only 2 rooms left!" — shown regardless of availability\n\n3. ⚠️ Pre-ticked marketing email checkbox during checkout\n\nThis is not a bug. It's intentional design to trap users.\n\n👉 Try the scanner: https://github.com/findsri/dark-pattern-detector\n\n#DarkPatterns #UX #Ethics #WebDesign #AI #Accessibility`,
+    linkedInPost: `🚫 I scanned booking.com and found 11 dark patterns. Here's what they don't want you to see 👇\n\n🎯 Sus Score: 82/100\n████████░░ 82%\n\nTop dark patterns found:\n\n1. 🚨 Confirm-Shaming: "No thanks, I prefer paying more"\n\n2. ⚠️ Fake Scarcity: "Only 2 rooms left!" — shown regardless of availability\n\n3. ⚠️ Pre-ticked marketing email checkbox during checkout\n\nThis is not a bug. It's intentional design to trap users.\n\n👉 Try the scanner: https://github.com/findsri/sus-score\n\n#DarkPatterns #UX #Ethics #WebDesign #AI #Accessibility`,
   },
 
   'linkedin.com': {
     scanId: 'demo-linkedin',
     url: 'https://linkedin.com',
     scannedAt: new Date().toISOString(),
-    evilScore: 74,
+    susScore: 74,
     totalPatterns: 9,
     scoreBreakdown: {
       low_contrast: 12,
@@ -151,14 +151,14 @@ export const DEMO_SCANS: Record<string, ScanResponse> = {
         description: 'Remove confirm-shaming — replace with neutral dismissal',
       },
     ],
-    linkedInPost: `👀 I scanned linkedin.com itself for dark patterns. The irony is real 👇\n\n🎯 Evil Score: 74/100\n███████░░░ 74%\n\nTop patterns found on LinkedIn:\n\n1. 🚨 Confirm-Shaming: "No thanks, I don't want to grow my network"\n2. ⚠️ 6 clicks to turn off email notifications\n3. ⚠️ Pre-ticked advertising data checkbox during onboarding\n\nA platform built for professionals using the same tricks as clickbait sites.\n\n👉 Scan any site yourself: https://github.com/findsri/dark-pattern-detector\n\n#DarkPatterns #LinkedIn #UX #Ethics #WebDesign`,
+    linkedInPost: `👀 I scanned linkedin.com itself for dark patterns. The irony is real 👇\n\n🎯 Sus Score: 74/100\n███████░░░ 74%\n\nTop patterns found on LinkedIn:\n\n1. 🚨 Confirm-Shaming: "No thanks, I don't want to grow my network"\n2. ⚠️ 6 clicks to turn off email notifications\n3. ⚠️ Pre-ticked advertising data checkbox during onboarding\n\nA platform built for professionals using the same tricks as clickbait sites.\n\n👉 Scan any site yourself: https://github.com/findsri/sus-score\n\n#DarkPatterns #LinkedIn #UX #Ethics #WebDesign`,
   },
 
   'github.com': {
     scanId: 'demo-github',
     url: 'https://github.com',
     scannedAt: new Date().toISOString(),
-    evilScore: 8,
+    susScore: 8,
     totalPatterns: 1,
     scoreBreakdown: {
       low_contrast: 0, tiny_font: 0, hidden_element: 0, no_styling: 8,
@@ -183,7 +183,7 @@ export const DEMO_SCANS: Record<string, ScanResponse> = {
         description: 'Add underline to make unsubscribe link visually distinct from plain text',
       },
     ],
-    linkedInPost: `✅ I scanned github.com for dark patterns.\n\n🎯 Evil Score: 8/100\n░░░░░░░░░░ 8%\n\nResult: Nearly clean. Just one minor issue — an unsubscribe link with no underline styling.\n\nThis is what ethical UX looks like. GitHub sets the bar.\n\nNot every company tries to trap you. Some are actually building for users.\n\n👉 See how your site scores: https://github.com/findsri/dark-pattern-detector\n\n#DarkPatterns #UX #Ethics #GitHub #WebDesign`,
+    linkedInPost: `✅ I scanned github.com for dark patterns.\n\n🎯 Sus Score: 8/100\n░░░░░░░░░░ 8%\n\nResult: Nearly clean. Just one minor issue — an unsubscribe link with no underline styling.\n\nThis is what ethical UX looks like. GitHub sets the bar.\n\nNot every company tries to trap you. Some are actually building for users.\n\n👉 See how your site scores: https://github.com/findsri/sus-score\n\n#DarkPatterns #UX #Ethics #GitHub #WebDesign`,
   },
 };
 

@@ -9,28 +9,28 @@ import { getScoreColor } from '@/lib/utils';
 // Demo data for pre-seeded domains
 const DEMO_TIMELINES: Record<string, TimelineEntry[]> = {
   'booking.com': [
-    { evil_score: 55, total_patterns: 6, scanned_at: '2024-01-15T00:00:00Z' },
-    { evil_score: 60, total_patterns: 7, scanned_at: '2024-02-15T00:00:00Z' },
-    { evil_score: 65, total_patterns: 8, scanned_at: '2024-03-15T00:00:00Z' },
-    { evil_score: 70, total_patterns: 9, scanned_at: '2024-04-15T00:00:00Z' },
-    { evil_score: 76, total_patterns: 10, scanned_at: '2024-05-15T00:00:00Z' },
-    { evil_score: 82, total_patterns: 11, scanned_at: '2024-06-15T00:00:00Z' },
+    { sus_score: 55, total_patterns: 6, scanned_at: '2024-01-15T00:00:00Z' },
+    { sus_score: 60, total_patterns: 7, scanned_at: '2024-02-15T00:00:00Z' },
+    { sus_score: 65, total_patterns: 8, scanned_at: '2024-03-15T00:00:00Z' },
+    { sus_score: 70, total_patterns: 9, scanned_at: '2024-04-15T00:00:00Z' },
+    { sus_score: 76, total_patterns: 10, scanned_at: '2024-05-15T00:00:00Z' },
+    { sus_score: 82, total_patterns: 11, scanned_at: '2024-06-15T00:00:00Z' },
   ],
   'linkedin.com': [
-    { evil_score: 60, total_patterns: 6, scanned_at: '2024-01-15T00:00:00Z' },
-    { evil_score: 65, total_patterns: 7, scanned_at: '2024-02-15T00:00:00Z' },
-    { evil_score: 68, total_patterns: 7, scanned_at: '2024-03-15T00:00:00Z' },
-    { evil_score: 72, total_patterns: 8, scanned_at: '2024-04-15T00:00:00Z' },
-    { evil_score: 74, total_patterns: 9, scanned_at: '2024-05-15T00:00:00Z' },
-    { evil_score: 74, total_patterns: 9, scanned_at: '2024-06-15T00:00:00Z' },
+    { sus_score: 60, total_patterns: 6, scanned_at: '2024-01-15T00:00:00Z' },
+    { sus_score: 65, total_patterns: 7, scanned_at: '2024-02-15T00:00:00Z' },
+    { sus_score: 68, total_patterns: 7, scanned_at: '2024-03-15T00:00:00Z' },
+    { sus_score: 72, total_patterns: 8, scanned_at: '2024-04-15T00:00:00Z' },
+    { sus_score: 74, total_patterns: 9, scanned_at: '2024-05-15T00:00:00Z' },
+    { sus_score: 74, total_patterns: 9, scanned_at: '2024-06-15T00:00:00Z' },
   ],
   'github.com': [
-    { evil_score: 12, total_patterns: 1, scanned_at: '2024-01-15T00:00:00Z' },
-    { evil_score: 10, total_patterns: 1, scanned_at: '2024-02-15T00:00:00Z' },
-    { evil_score: 9, total_patterns: 1, scanned_at: '2024-03-15T00:00:00Z' },
-    { evil_score: 8, total_patterns: 1, scanned_at: '2024-04-15T00:00:00Z' },
-    { evil_score: 7, total_patterns: 0, scanned_at: '2024-05-15T00:00:00Z' },
-    { evil_score: 8, total_patterns: 1, scanned_at: '2024-06-15T00:00:00Z' },
+    { sus_score: 12, total_patterns: 1, scanned_at: '2024-01-15T00:00:00Z' },
+    { sus_score: 10, total_patterns: 1, scanned_at: '2024-02-15T00:00:00Z' },
+    { sus_score: 9, total_patterns: 1, scanned_at: '2024-03-15T00:00:00Z' },
+    { sus_score: 8, total_patterns: 1, scanned_at: '2024-04-15T00:00:00Z' },
+    { sus_score: 7, total_patterns: 0, scanned_at: '2024-05-15T00:00:00Z' },
+    { sus_score: 8, total_patterns: 1, scanned_at: '2024-06-15T00:00:00Z' },
   ],
 };
 
@@ -43,7 +43,7 @@ const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<
       <div className="glass rounded-xl p-3 border border-border text-xs space-y-1">
         <p className="text-text-secondary">{d.date}</p>
         <p className="font-semibold" style={{ color: getScoreColor(d.score) }}>
-          Evil Score: {d.score}/100
+          Sus Score: {d.score}/100
         </p>
         <p className="text-muted">Patterns: {d.patterns}</p>
       </div>
@@ -82,7 +82,7 @@ export default function TimelinePage() {
 
   const chartData: ChartPoint[] = timeline.map(t => ({
     date: new Date(t.scanned_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-    score: t.evil_score,
+    score: t.sus_score,
     patterns: t.total_patterns,
   }));
 
@@ -95,7 +95,7 @@ export default function TimelinePage() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
         <div className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-3 py-1 text-xs text-accent-light mb-4">
           <Clock className="w-3.5 h-3.5" />
-          Evil Score Timeline
+          Sus Score Timeline
         </div>
         <h1 className="text-3xl font-extrabold mb-3">Track <span className="gradient-text">Dark Pattern Changes</span> Over Time</h1>
         <p className="text-text-secondary">See if websites are getting better or worse. Catch companies slowly adding dark patterns.</p>

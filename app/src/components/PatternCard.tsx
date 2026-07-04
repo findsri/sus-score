@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronUp, AlertTriangle, Code, Wrench } from 'lucide-react';
-import { DetectedPattern } from '@dark-pattern-detector/detector';
+import { DetectedPattern } from '@sus-score/detector';
 import { getSeverityColor, getCategoryLabel } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 

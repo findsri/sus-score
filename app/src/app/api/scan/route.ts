@@ -502,11 +502,11 @@ function scorePatterns(patterns: DetectedPattern[]) {
   }
   const totalMax = Object.values(CATEGORY_MAX).reduce((a, b) => a + b, 0);
   const total    = Object.values(breakdown).reduce((a, b) => a + b, 0);
-  const evilScore = Math.min(Math.round((total / totalMax) * 100), 100);
+  const susScore = Math.min(Math.round((total / totalMax) * 100), 100);
   const full = Object.fromEntries(
     (Object.keys(CATEGORY_MAX) as PatternCategory[]).map(k => [k, breakdown[k] ?? 0])
   ) as Record<PatternCategory, number>;
-  return { evilScore, breakdown: full };
+  return { susScore, breakdown: full };
 }
 
 // ── LinkedIn post ─────────────────────────────────────────────────────────────
@@ -525,9 +525,9 @@ function generateLinkedInPost(url: string | undefined, score: number, patterns: 
   const lines = top3.map((p,i) =>
     `\n${i+1}. ${p.severity==='critical'?'🚨':p.severity==='high'?'⚠️':'🟡'} ${p.description.slice(0,100)}`
   ).join('');
-  return `${opener}\n\n🎯 Evil Score: ${score}/100\n${bar} ${score}%${
+  return `${opener}\n\n🎯 Sus Score: ${score}/100\n${bar} ${score}%${
     top3.length ? '\n\nTop patterns found:'+lines : ''
-  }\n\n👉 Try the scanner: https://github.com/findsri/dark-pattern-detector\n\n#DarkPatterns #UX #Ethics #WebDesign #AI #Accessibility`;
+  }\n\n👉 Try the scanner: https://github.com/findsri/sus-score\n\n#DarkPatterns #UX #Ethics #WebDesign #AI #Accessibility`;
 }
 
 // ── Fetch HTML from a URL (real browser-like headers) ────────────────────────
@@ -604,8 +604,8 @@ export async function POST(req: NextRequest) {
     }
 
     const patterns = detectPatterns(pageHtml, url);
-    const { evilScore, breakdown } = scorePatterns(patterns);
-    const linkedInPost = generateLinkedInPost(url, evilScore, patterns);
+    const { susScore, breakdown } = scorePatterns(patterns);
+    const linkedInPost = generateLinkedInPost(url, susScore, patterns);
 
     const diff = patterns
       .filter(p => p.fixedElement && p.fixedElement !== p.element)
@@ -616,7 +616,7 @@ export async function POST(req: NextRequest) {
       scanId: `live-${Date.now()}`,
       url,
       scannedAt: new Date().toISOString(),
-      evilScore,
+      susScore,
       totalPatterns: patterns.length,
       scoreBreakdown: breakdown,
       patterns,

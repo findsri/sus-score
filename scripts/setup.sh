@@ -6,7 +6,7 @@ export NVM_DIR="$HOME/.nvm"
 
 echo "==> Node: $(node --version), npm: $(npm --version)"
 
-ROOT="/Users/srilekha/dark-pattern-detector"
+ROOT="/Users/srilekha/sus-score"
 
 # ── 1. Build detector package first (no workspace deps) ─────────────────────
 echo "==> [1/3] Installing detector package..."

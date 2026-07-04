@@ -10,10 +10,10 @@ export default function ExtensionPage() {
           Browser Extension
         </div>
         <h1 className="text-3xl font-extrabold mb-3">
-          Dark Pattern Detector <span className="gradient-text">Extension</span>
+          Sus Score <span className="gradient-text">Extension</span>
         </h1>
         <p className="text-text-secondary max-w-xl mx-auto">
-          Get real-time Evil Score badges on every website you visit.
+          Get real-time Sus Score badges on every website you visit.
           No need to copy URLs — it just works in the background.
         </p>
       </div>
@@ -58,7 +58,7 @@ export default function ExtensionPage() {
             { step: '2', title: 'Open Chrome Extensions', desc: 'Navigate to chrome://extensions in your browser.' },
             { step: '3', title: 'Enable Developer Mode', desc: 'Toggle the "Developer mode" switch in the top right corner.' },
             { step: '4', title: 'Load Unpacked', desc: 'Click "Load unpacked" and select the unzipped extension folder.' },
-            { step: '5', title: 'Start browsing', desc: 'The Dark Pattern Detector badge will appear on every website you visit.' },
+            { step: '5', title: 'Start browsing', desc: 'The Sus Score badge will appear on every website you visit.' },
           ].map(({ step, title, desc }) => (
             <div key={step} className="flex gap-4 items-start">
               <div className="w-7 h-7 rounded-full bg-accent/20 text-accent-light text-xs font-bold flex items-center justify-center flex-shrink-0">
@@ -77,7 +77,7 @@ export default function ExtensionPage() {
       <div className="grid grid-cols-3 gap-4">
         {[
           { icon: Zap, title: 'Real-time scanning', desc: 'Scans every page as you browse, instantly.' },
-          { icon: Eye, title: 'Evil Score badge', desc: 'Colored badge shows the score at a glance.' },
+          { icon: Eye, title: 'Sus Score badge', desc: 'Colored badge shows the score at a glance.' },
           { icon: Shield, title: 'Pattern details', desc: 'Click the badge to see the full pattern report.' },
         ].map(({ icon: Icon, title, desc }) => (
           <div key={title} className="glass rounded-xl p-4 text-center">

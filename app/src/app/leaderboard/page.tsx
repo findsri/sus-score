@@ -7,16 +7,16 @@ import { getScoreColor, getScoreLabel } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 
 const SEED_DATA: LeaderboardEntry[] = [
-  { domain: 'booking.com',     latest_evil_score: 82, worst_score: 87, best_score: 75, scan_count: 142, last_scanned_at: new Date().toISOString() },
-  { domain: 'linkedin.com',    latest_evil_score: 74, worst_score: 78, best_score: 65, scan_count: 98,  last_scanned_at: new Date().toISOString() },
-  { domain: 'booking.com',     latest_evil_score: 71, worst_score: 76, best_score: 60, scan_count: 67,  last_scanned_at: new Date().toISOString() },
-  { domain: 'ticketmaster.com',latest_evil_score: 68, worst_score: 72, best_score: 55, scan_count: 45,  last_scanned_at: new Date().toISOString() },
-  { domain: 'tripadvisor.com', latest_evil_score: 64, worst_score: 68, best_score: 50, scan_count: 39,  last_scanned_at: new Date().toISOString() },
-  { domain: 'hotels.com',      latest_evil_score: 61, worst_score: 65, best_score: 48, scan_count: 31,  last_scanned_at: new Date().toISOString() },
-  { domain: 'quora.com',       latest_evil_score: 55, worst_score: 60, best_score: 45, scan_count: 28,  last_scanned_at: new Date().toISOString() },
-  { domain: 'forbes.com',      latest_evil_score: 49, worst_score: 55, best_score: 40, scan_count: 22,  last_scanned_at: new Date().toISOString() },
-  { domain: 'reddit.com',      latest_evil_score: 23, worst_score: 28, best_score: 18, scan_count: 88,  last_scanned_at: new Date().toISOString() },
-  { domain: 'github.com',      latest_evil_score: 8,  worst_score: 12, best_score: 5,  scan_count: 120, last_scanned_at: new Date().toISOString() },
+  { domain: 'booking.com',     latest_sus_score: 82, worst_score: 87, best_score: 75, scan_count: 142, last_scanned_at: new Date().toISOString() },
+  { domain: 'linkedin.com',    latest_sus_score: 74, worst_score: 78, best_score: 65, scan_count: 98,  last_scanned_at: new Date().toISOString() },
+  { domain: 'booking.com',     latest_sus_score: 71, worst_score: 76, best_score: 60, scan_count: 67,  last_scanned_at: new Date().toISOString() },
+  { domain: 'ticketmaster.com',latest_sus_score: 68, worst_score: 72, best_score: 55, scan_count: 45,  last_scanned_at: new Date().toISOString() },
+  { domain: 'tripadvisor.com', latest_sus_score: 64, worst_score: 68, best_score: 50, scan_count: 39,  last_scanned_at: new Date().toISOString() },
+  { domain: 'hotels.com',      latest_sus_score: 61, worst_score: 65, best_score: 48, scan_count: 31,  last_scanned_at: new Date().toISOString() },
+  { domain: 'quora.com',       latest_sus_score: 55, worst_score: 60, best_score: 45, scan_count: 28,  last_scanned_at: new Date().toISOString() },
+  { domain: 'forbes.com',      latest_sus_score: 49, worst_score: 55, best_score: 40, scan_count: 22,  last_scanned_at: new Date().toISOString() },
+  { domain: 'reddit.com',      latest_sus_score: 23, worst_score: 28, best_score: 18, scan_count: 88,  last_scanned_at: new Date().toISOString() },
+  { domain: 'github.com',      latest_sus_score: 8,  worst_score: 12, best_score: 5,  scan_count: 120, last_scanned_at: new Date().toISOString() },
 ];
 
 const RANK_MEDALS = ['🥇', '🥈', '🥉'];
@@ -57,8 +57,8 @@ export default function LeaderboardPage() {
       .catch(() => {});
   }, []);
 
-  const topScore = entries[0]?.latest_evil_score ?? 0;
-  const avgScore = Math.round(entries.reduce((s, e) => s + e.latest_evil_score, 0) / entries.length);
+  const topScore = entries[0]?.latest_sus_score ?? 0;
+  const avgScore = Math.round(entries.reduce((s, e) => s + e.latest_sus_score, 0) / entries.length);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
@@ -72,7 +72,7 @@ export default function LeaderboardPage() {
           Most <span className="gradient-text">Manipulative</span> Websites
         </h1>
         <p className="text-text-secondary max-w-xl mx-auto text-sm">
-          Ranked by Evil Score. Every site scan updates this leaderboard in real time.
+          Ranked by Sus Score. Every site scan updates this leaderboard in real time.
           {!usingLiveData && (
             <span className="text-muted block mt-1 text-xs">Showing demo data — connect a database for live community rankings</span>
           )}
@@ -104,13 +104,13 @@ export default function LeaderboardPage() {
         <div className="grid grid-cols-[44px_1fr_140px_110px_72px] gap-0 px-5 py-3 border-b border-border text-xs font-semibold uppercase tracking-wider text-muted">
           <div>#</div>
           <div>Website</div>
-          <div>Evil Score</div>
+          <div>Sus Score</div>
           <div className="text-center">Peak / Best</div>
           <div className="text-right">Scans</div>
         </div>
 
         {entries.map((entry, i) => {
-          const color = getScoreColor(entry.latest_evil_score);
+          const color = getScoreColor(entry.latest_sus_score);
           return (
             <motion.div
               key={entry.domain}
@@ -139,14 +139,14 @@ export default function LeaderboardPage() {
                     {entry.domain}
                     <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-50 transition-opacity" />
                   </a>
-                  <TrendIcon latest={entry.latest_evil_score} worst={entry.worst_score} best={entry.best_score} />
+                  <TrendIcon latest={entry.latest_sus_score} worst={entry.worst_score} best={entry.best_score} />
                 </div>
-                <p className="text-xs mt-0.5" style={{ color }}>{getScoreLabel(entry.latest_evil_score)}</p>
+                <p className="text-xs mt-0.5" style={{ color }}>{getScoreLabel(entry.latest_sus_score)}</p>
               </div>
 
               {/* Score bar */}
               <div>
-                <EvilBar score={entry.latest_evil_score} />
+                <EvilBar score={entry.latest_sus_score} />
               </div>
 
               {/* Range */}

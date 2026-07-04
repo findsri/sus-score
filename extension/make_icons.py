@@ -1,5 +1,5 @@
 """
-Generate Dark Pattern Detector icons — detective magnifying glass.
+Generate Sus Score icons — detective magnifying glass.
 Zero dependencies, pure Python stdlib.
 """
 import struct, zlib, math, os

@@ -1,10 +1,10 @@
-#  Dark Pattern Detector
+#  Sus Score
 
 > **Expose the manipulation. Score the shame. Fix the web.**
 
-A full-stack tool that scans any website or email for deceptive UX dark patterns — hidden unsubscribe buttons, confirm-shaming, fake urgency, invisible opt-out links — and gives it an **Evil Score from 0 to 100**.
+A full-stack tool that scans any website or email for deceptive UX dark patterns — hidden unsubscribe buttons, confirm-shaming, fake urgency, invisible opt-out links — and gives it an **Sus Score from 0 to 100**.
 
-![Dark Pattern Detector](https://img.shields.io/badge/Evil%20Score-0--100-red?style=for-the-badge)
+![Sus Score](https://img.shields.io/badge/Evil%20Score-0--100-red?style=for-the-badge)
 ![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
 ![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-lightgrey?style=for-the-badge)
@@ -27,14 +27,14 @@ You've seen them. Websites that:
 
 | Feature | Description |
 |---|---|
-|  **Evil Score (0–100)** | Animated gauge with per-category breakdown |
-|  **8 Dark Pattern Detectors** | Low contrast, tiny fonts, hidden elements, confirm-shaming, misleading labels, pre-ticked boxes, fake urgency, footer burial |
+|  **Sus Score (0–100)** | Animated gauge with per-category breakdown |
+|  **8 Sus Scores** | Low contrast, tiny fonts, hidden elements, confirm-shaming, misleading labels, pre-ticked boxes, fake urgency, footer burial |
 |  **Before/After Screenshots** | Side-by-side original vs cleaned view via Puppeteer |
 |  **Email Newsletter Scanner** | Paste raw email HTML — first tool to detect dark patterns *inside* emails |
-|  **Evil Score Timeline** | Track how a site's dark patterns change week over week |
+|  **Sus Score Timeline** | Track how a site's dark patterns change week over week |
 |  **"Fix It For Me"** | Diff view showing the exact HTML changes needed |
 |  **LinkedIn Post Generator** | One-click ready-to-post report for sharing findings |
-|  **Chrome Extension** | Real-time Evil Score badge on every page you visit |
+|  **Chrome Extension** | Real-time Sus Score badge on every page you visit |
 
 ---
 
@@ -51,8 +51,8 @@ You've seen them. Websites that:
 - PostgreSQL 14+ (or skip DB for demo mode)
 
 ```bash
-git clone https://github.com/findsri/dark-pattern-detector.git
-cd dark-pattern-detector
+git clone https://github.com/findsri/sus-score.git
+cd sus-score
 npm install
 ```
 
@@ -95,17 +95,17 @@ npm run dev   # starts both API (4000) and frontend (3000)
 3. Click **Load Unpacked**
 4. Select the `extension/` folder
 
-You'll see an Evil Score badge appear on every website you visit.
+You'll see an Sus Score badge appear on every website you visit.
 
 ---
 
 ##  Project Structure
 
 ```
-dark-pattern-detector/
+sus-score/
 ├── app/                        # Next.js 14 + Tailwind frontend
 │   ├── src/app/                # Pages (scanner, leaderboard, timeline, email)
-│   └── src/components/         # EvilScoreGauge, PatternCard, DiffViewer…
+│   └── src/components/         # SusScoreGauge, PatternCard, DiffViewer…
 │
 ├── api/                        # Express + TypeScript backend
 │   ├── src/routes/scan.ts      # POST /api/scan
@@ -115,7 +115,7 @@ dark-pattern-detector/
 │
 ├── packages/detector/          #  Shared detection library (importable)
 │   ├── src/detectors/          # unsubscribeDetector, generalDarkPatterns
-│   ├── src/utils/scoring.ts    # Evil Score algorithm
+│   ├── src/utils/scoring.ts    # Sus Score algorithm
 │   ├── src/linkedInGenerator.ts
 │   └── src/fixGenerator.ts     # HTML diff + auto-fix
 │
@@ -144,7 +144,7 @@ dark-pattern-detector/
 ```json
 {
   "scanId": "uuid",
-  "evilScore": 74,
+  "susScore": 74,
   "totalPatterns": 9,
   "scoreBreakdown": { "low_contrast": 18, "confirm_shaming": 16, … },
   "patterns": [ { "category": "confirm_shaming", "severity": "high", … } ],
@@ -163,7 +163,7 @@ dark-pattern-detector/
 
 ---
 
-##  How the Evil Score Works
+##  How the Sus Score Works
 
 Each detected pattern adds weighted points to a category bucket (capped per category). The total is normalized to 0–100.
 

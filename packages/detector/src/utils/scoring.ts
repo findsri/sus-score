@@ -19,8 +19,8 @@ const CATEGORY_MAX: Record<PatternCategory, number> = {
   opacity_hidden: 20,
 };
 
-export function calculateEvilScore(patterns: DetectedPattern[]): {
-  evilScore: number;
+export function calculateSusScore(patterns: DetectedPattern[]): {
+  susScore: number;
   breakdown: Record<PatternCategory, number>;
 } {
   const breakdown: Partial<Record<PatternCategory, number>> = {};
@@ -34,7 +34,7 @@ export function calculateEvilScore(patterns: DetectedPattern[]): {
 
   const totalMax = Object.values(CATEGORY_MAX).reduce((a, b) => a + b, 0);
   const totalScore = Object.values(breakdown).reduce((a, b) => a + b, 0);
-  const evilScore = Math.min(Math.round((totalScore / totalMax) * 100), 100);
+  const susScore = Math.min(Math.round((totalScore / totalMax) * 100), 100);
 
   // Fill in zeroes for missing categories
   const fullBreakdown = Object.fromEntries(
@@ -44,5 +44,5 @@ export function calculateEvilScore(patterns: DetectedPattern[]): {
     ])
   ) as Record<PatternCategory, number>;
 
-  return { evilScore, breakdown: fullBreakdown };
+  return { susScore, breakdown: fullBreakdown };
 }

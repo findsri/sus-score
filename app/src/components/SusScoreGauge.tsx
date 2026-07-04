@@ -3,12 +3,12 @@ import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { getScoreColor, getScoreLabel } from '@/lib/utils';
 
-interface EvilScoreGaugeProps {
+interface SusScoreGaugeProps {
   score: number;
   size?: number;
 }
 
-export function EvilScoreGauge({ score, size = 200 }: EvilScoreGaugeProps) {
+export function SusScoreGauge({ score, size = 200 }: SusScoreGaugeProps) {
   const color = getScoreColor(score);
   const label = getScoreLabel(score);
 
