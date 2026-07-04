@@ -1,74 +1,78 @@
-// Run after page loads
-(function () {
-  if (window.__darkPatternDetectorInjected) return;
-  window.__darkPatternDetectorInjected = true;
+// content.js — runs on every page, grabs real DOM and sends to your API
 
+const API_URL = 'http://localhost:3000/api/scan';
+
+async function scanPage() {
   const html = document.documentElement.outerHTML;
   const url = window.location.href;
 
-  // Skip extension pages and local files
-  if (url.startsWith('chrome://') || url.startsWith('chrome-extension://') || url.startsWith('file://')) {
-    return;
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ html, url })  // sends real rendered HTML
+    });
+
+    const data = await res.json();
+
+    // Send score to background script to update badge
+    chrome.runtime.sendMessage({
+      type: 'SCAN_COMPLETE',
+      score: data.evilScore,
+      patterns: data.patterns,
+      url
+    });
+
+    // Inject a small floating badge on the page
+    injectBadge(data.evilScore, data.totalPatterns);
+
+  } catch (err) {
+    console.error('[DarkPatternDetector] scan failed:', err);
   }
+}
 
-  // Throttle: don't scan the same URL twice
-  chrome.runtime.sendMessage({
-    type: 'SCAN_PAGE',
-    html: html.slice(0, 200000), // Cap at 200KB
-    url,
-    tabId: undefined, // Background uses sender.tab.id
-  }, (response) => {
-    if (chrome.runtime.lastError) return;
-    if (response?.success && response.data) {
-      // Optionally inject a subtle score badge into the DOM
-      injectScoreBadge(response.data.evilScore);
-    }
-  });
-})();
+function injectBadge(score, patternCount) {
+  // Remove existing badge if any
+  const existing = document.getElementById('dpd-badge');
+  if (existing) existing.remove();
 
-function injectScoreBadge(score) {
-  if (score < 10) return; // Don't show badge for clean sites
-
-  const color = score >= 70 ? '#ef4444' : score >= 40 ? '#f59e0b' : '#eab308';
+  const color = score >= 60 ? '#ef4444' : score >= 30 ? '#f59e0b' : '#22c55e';
+  const label = score >= 60 ? '⚠ HIGH RISK' : score >= 30 ? '⚡ MODERATE' : '✓ CLEAN';
 
   const badge = document.createElement('div');
-  badge.id = '__dpd-badge';
+  badge.id = 'dpd-badge';
+  badge.innerHTML = `
+    <div style="font-size:11px;font-weight:700;color:white;">${label}</div>
+    <div style="font-size:20px;font-weight:900;color:white;line-height:1;">${score}</div>
+    <div style="font-size:10px;color:rgba(255,255,255,0.8);">Evil Score</div>
+    <div style="font-size:10px;color:rgba(255,255,255,0.7);">${patternCount} patterns</div>
+  `;
   badge.style.cssText = `
     position: fixed;
-    bottom: 16px;
-    right: 16px;
-    z-index: 2147483647;
-    background: #0a0a0f;
-    border: 1px solid ${color};
+    bottom: 20px;
+    right: 20px;
+    z-index: 999999;
+    background: ${color};
     border-radius: 12px;
-    padding: 6px 10px;
-    font-family: -apple-system, sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    color: ${color};
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 8px ${color}40;
+    padding: 10px 14px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    user-select: none;
-    transition: opacity 0.2s;
+    font-family: -apple-system, sans-serif;
+    min-width: 90px;
+    transition: transform 0.2s;
   `;
-  badge.innerHTML = `
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.5">
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-    </svg>
-    Evil: ${score}/100
-  `;
-
-  badge.title = `Dark Pattern Detector: Evil Score ${score}/100. Click to dismiss.`;
-  badge.addEventListener('click', () => badge.remove());
-
-  // Auto-hide after 8 seconds
-  setTimeout(() => {
-    badge.style.opacity = '0';
-    setTimeout(() => badge.remove(), 200);
-  }, 8000);
+  badge.title = 'Click to open Dark Pattern Detector';
+  badge.onclick = () => window.open('http://localhost:3000', '_blank');
+  badge.onmouseenter = () => badge.style.transform = 'scale(1.05)';
+  badge.onmouseleave = () => badge.style.transform = 'scale(1)';
 
   document.body.appendChild(badge);
+}
+
+// Run after page is fully loaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', scanPage);
+} else {
+  scanPage();
 }

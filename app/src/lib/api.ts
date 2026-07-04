@@ -14,6 +14,7 @@ export interface ScanResponse extends ScanResult {
   screenshotBase64?: string;
   cleanScreenshotBase64?: string;
   diff?: Array<{ original: string; fixed: string; description: string }>;
+  warning?: string;
 }
 
 export async function runScan(params: {

@@ -79,7 +79,7 @@ function renderError() {
     <div class="empty">
       <div style="font-size:20px;margin-bottom:6px">⚠️</div>
       <div style="font-size:12px;margin-bottom:8px">Could not scan this page.</div>
-      <div style="font-size:10px;color:#6b7280">Make sure the API server is running at localhost:4000</div>
+      <div style="font-size:10px;color:#6b7280">Make sure the API server is running at localhost:3000</div>
     </div>
     <a href="http://localhost:3000" target="_blank" class="cta-btn">Open Web App →</a>
   `;
