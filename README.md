@@ -42,16 +42,7 @@ You've seen them. Websites that:
 
 > Try it live or run the demo mode locally (no database needed)
 
-**Sample results from real sites:**
 
-| Website | Evil Score | Worst Pattern |
-|---|---|---|
-| amazon.com | 🔴 **82/100** | Confirm-shaming on Prime popup |
-| linkedin.com | 🟠 **74/100** | Pre-ticked marketing checkboxes |
-| booking.com | 🟠 **71/100** | Fake "only 2 rooms left" urgency |
-| github.com | 🟢 **8/100** | Nearly clean |
-
----
 
 ##  Quick Start
 
